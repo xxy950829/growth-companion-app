@@ -78,6 +78,8 @@ growth-companion-app/
 - **Region**: ``
 - **Access Token**: Configured in [services/cloudbase.ts](services/cloudbase.ts) (Publishable Key, can be public)
 
+**you can replace youself**
+
 ### Initialization Notes
 
 1. **Must register RN adapter**: `cloudbase.useAdapters(adapter)` must be called before `init()`
