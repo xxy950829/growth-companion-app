@@ -16,11 +16,11 @@ cloudbaseSDK.useAdapters(adapter);
 
 const cloudbase = cloudbaseSDK.init({
   // 环境 ID
-  env: "hibiscus-1995-d4g2ysc4s44d440d1",
+  env: "",
   // 地域
-  region: "ap-shanghai",
+  region: "",
   // 匿名访问令牌
-  accessKey: "eyJhbGciOiJSUzI1NiIsImtpZCI6IjlkMWRjMzFlLWI0ZDAtNDQ4Yi1hNzZmLWIwY2M2M2Q4MTQ5OCJ9.eyJpc3MiOiJodHRwczovL2hpYmlzY3VzLTE5OTUtZDRnMnlzYzRzNDRkNDQwZDEuYXAtc2hhbmdoYWkudGNiLWFwaS50ZW5jZW50Y2xvdWRhcGkuY29tIiwic3ViIjoiYW5vbiIsImF1ZCI6ImhpYmlzY3VzLTE5OTUtZDRnMnlzYzRzNDRkNDQwZDEiLCJleHAiOjQwODU0MzIyOTIsImlhdCI6MTc4MTc0OTA5Miwibm9uY2UiOiJUZ2FsTnYtelNKU0tZZWM5U3ZXM0tRIiwiYXRfaGFzaCI6IlRnYWxOdi16U0pTS1llYzlTdlczS1EiLCJuYW1lIjoiQW5vbnltb3VzIiwic2NvcGUiOiJhbm9ueW1vdXMiLCJwcm9qZWN0X2lkIjoiaGliaXNjdXMtMTk5NS1kNGcyeXNjNHM0NGQ0NDBkMSIsIm1ldGEiOnsicGxhdGZvcm0iOiJQdWJsaXNoYWJsZUtleSJ9LCJ1c2VyX3R5cGUiOiIiLCJjbGllbnRfdHlwZSI6ImNsaWVudF91c2VyIiwiaXNfc3lzdGVtX2FkbWluIjpmYWxzZX0.p_qiVpIwjky9lkRacjuFFkQsrX7Yk6qjmP-QjWZ37VBQtwBt2VNng-6wjumvOBLyeRhjEPOR46zGV-NYZbSZfrcmi-trXSFV__x9p-RBArKMXBHcGHx9bGKBE35aqcH-5sR9zvvzXxJgzBoXdUnjinNh4hBS6OYBWqhEZGqrRrj7Q15Th0LnsGLp-2AmqCUimzIXKXmRPZjPEsXF5tqk3hCyTbV0yACCPmHRWP3-6kyvb9mMeV9ndzwm_e6t3-89h1ssbFjBDKykkI71sRMUkEqbdp5OKF7_afMUQJscSmoHHo_40OlRF7Cg6k5n0Md-xnOFMORQY4-FqIihv6nlCw"
+  accessKey: ""
 });
 
 export default cloudbase;
