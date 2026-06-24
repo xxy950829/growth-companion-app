@@ -1,0 +1,45 @@
+{
+  "expo": {
+    "name": "童伴星球",
+    "slug": "growth-companion-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/growth_planet_1024x1024.jpg",
+    "scheme": "growthcompanion",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/growth_planet_1024x1024.jpg",
+      "resizeMode": "contain",
+      "backgroundColor": "#FFF8F3"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.growthcompanion.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/growth_planet_1024x1024.jpg",
+        "backgroundColor": "#FFF8F3"
+      },
+      "package": "com.growthcompanion.app"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/growth_planet_1024x1024.jpg"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "童伴星球需要访问您的相册以保存宝宝成长照片。",
+          "cameraPermission": "童伴星球需要访问您的相机以拍摄宝宝成长照片。"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
