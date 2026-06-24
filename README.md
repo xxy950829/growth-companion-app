@@ -74,8 +74,8 @@ growth-companion-app/
 
 ### Environment Info
 
-- **Environment ID**: `hibiscus-1995-d4g2ysc4s44d440d1`
-- **Region**: `ap-shanghai`
+- **Environment ID**: ``
+- **Region**: ``
 - **Access Token**: Configured in [services/cloudbase.ts](services/cloudbase.ts) (Publishable Key, can be public)
 
 ### Initialization Notes
