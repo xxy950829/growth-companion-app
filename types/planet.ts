@@ -14,6 +14,7 @@ export interface TaskCompletion {
   completedAt: number;
   completedBy: 'parent' | 'child';
   note?: string;
+  dateKey?: string; // YYYYMMDD，后端返回时携带，用于按日期分组
 }
 
 // 按日期组织的完成记录

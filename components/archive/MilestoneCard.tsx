@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Card } from '@/components/ui/Card';
 import { COLORS } from '@/utils/constants';
-import { MILESTONE_TYPE_CONFIG } from '@/types/archive';
+import { MILESTONE_TYPE_CONFIG, isMeasurementType } from '@/types/archive';
 import type { Milestone } from '@/types';
 import { formatDateChinese } from '@/utils/helpers';
 
@@ -28,8 +28,8 @@ export function MilestoneCard({ milestone, onDelete, showDate = true }: Mileston
       <Text style={styles.title}>{milestone.title}</Text>
       {milestone.description ? <Text style={styles.desc}>{milestone.description}</Text> : null}
 
-      {/* 身高体重特有 */}
-      {(milestone.type === 'height' || milestone.type === 'weight') && (
+      {/* 身高体重特有（兼容历史 height/weight 类型数据） */}
+      {isMeasurementType(milestone.type) && (
         <View style={styles.metricRow}>
           {milestone.height != null && (
             <View style={styles.metric}>

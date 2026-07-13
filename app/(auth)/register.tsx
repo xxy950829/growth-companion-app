@@ -6,12 +6,12 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  Alert,
 } from 'react-native';
 import { Link, router } from 'expo-router';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useAuthStore } from '@/stores/authStore';
+import { toast } from '@/stores/uiStore';
 import { COLORS } from '@/utils/constants';
 import { validateEmail, validatePassword, validatePhone } from '@/utils/validators';
 import { EVENTS, logEvent, setUserProperty } from '@/services/analytics';
@@ -50,7 +50,7 @@ export default function RegisterScreen() {
       setUserProperty('displayName', displayName.trim());
       router.replace('/');
     } catch (e) {
-      Alert.alert('注册失败', (e as Error).message);
+      toast.error((e as Error).message);
     }
   };
 
@@ -102,7 +102,7 @@ export default function RegisterScreen() {
 
           {formError && <Text style={styles.error}>{formError}</Text>}
 
-          <Button title="注册" onPress={handleRegister} loading={loading} style={styles.btn} />
+          <Button title="注册" onPress={handleRegister} loading={loading} size="lg" style={styles.btn} />
 
           <View style={styles.footer}>
             <Text style={styles.footerText}>已有账号？</Text>
@@ -148,7 +148,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   btn: {
-    marginTop: 8,
+    marginTop: 16,
+    width: '100%',
   },
   error: {
     color: COLORS.danger,

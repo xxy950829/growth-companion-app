@@ -1,8 +1,8 @@
 // 认证状态管理
 import { create } from 'zustand';
 import type { User, Baby } from '@/types';
-import * as authService from '@/services/auth';
-import * as db from '@/services/database';
+import * as authService from '@/services/api-auth';
+import * as db from '@/services/api-database';
 import { generateId } from '@/utils/helpers';
 
 interface AuthState {
@@ -18,6 +18,7 @@ interface AuthState {
   logout: () => Promise<void>;
 
   createBaby: (data: Omit<Baby, 'id' | 'createdAt'>) => Promise<Baby>;
+  updateBaby: (babyId: string, data: Partial<Omit<Baby, 'id' | 'createdAt'>>) => Promise<void>;
   switchBaby: (babyId: string) => Promise<void>;
   refreshBabies: () => Promise<void>;
   clearError: () => void;
@@ -88,16 +89,23 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   createBaby: async (data) => {
+    // 后端生成 id，前端只传数据
     const baby: Baby = {
       ...data,
-      id: generateId('baby'),
+      id: generateId('baby'), // 临时 id，addBaby 会返回后端生成的真实数据
       createdAt: Date.now(),
     };
-    await db.addBaby(baby);
-    await db.setCurrentBaby(baby.id);
+    const created = await db.addBaby(baby);
+    await db.setCurrentBaby(created.id);
+    const babies = [...get().babies, created];
+    set({ babies, currentBabyId: created.id });
+    return created;
+  },
+
+  updateBaby: async (babyId, data) => {
+    await db.updateBaby(babyId, data);
     const babies = await db.loadBabies();
-    set({ babies, currentBabyId: baby.id });
-    return baby;
+    set({ babies });
   },
 
   switchBaby: async (babyId) => {

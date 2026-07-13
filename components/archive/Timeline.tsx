@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, ListRenderItem } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { MilestoneCard } from './MilestoneCard';
 import type { Milestone } from '@/types';
 import { COLORS } from '@/utils/constants';
@@ -44,7 +44,7 @@ export function Timeline({ milestones, onDelete, emptyText = '还没有记录，
     );
   }
 
-  const renderItem: ListRenderItem<Group> = ({ item }) => (
+  const renderGroup = (item: Group) => (
     <View style={styles.group}>
       <View style={styles.dateRow}>
         <View style={styles.dateDot} />
@@ -62,13 +62,11 @@ export function Timeline({ milestones, onDelete, emptyText = '还没有记录，
   );
 
   return (
-    <FlatList
-      data={groups}
-      keyExtractor={(item) => item.dateKey}
-      renderItem={renderItem}
-      contentContainerStyle={styles.list}
-      showsVerticalScrollIndicator={false}
-    />
+    <View style={styles.list}>
+      {groups.map((item) => (
+        <View key={item.dateKey}>{renderGroup(item)}</View>
+      ))}
+    </View>
   );
 }
 

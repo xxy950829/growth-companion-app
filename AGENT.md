@@ -171,6 +171,35 @@ npm install
 - `accessKey` 是 Publishable Key，设计上可公开（类似 Firebase API Key）
 - 如需更高安全性，可迁移到 `app.json` 的 `extra` 字段或环境变量
 
+### 6. React Navigation 版本对齐
+
+- `expo-router` 内部依赖 React Navigation 7，严禁回退 `@react-navigation/native` 到 6.x
+- 当前应保持：`@react-navigation/native@^7.3.5`、`@react-navigation/native-stack@^7.4.6`
+- 若终端出现 `createScreenFactory is not a function`，优先检查这两个包版本
+
+### 7. Reanimated / Worklets 依赖陷阱
+
+- `babel-preset-expo` 会自动引入 Reanimated 相关 Babel 插件链
+- 若 `package.json` 中存在 `react-native-reanimated`，即使代码未使用，也可能触发对 `react-native-worklets` 的解析
+- `react-native-worklets` 当前要求 React Native 0.83+，与 RN 0.81/0.82 冲突
+- **本项目未使用 Reanimated**，应保持 `package.json` 中无 `react-native-reanimated` 和 `react-native-worklets`
+
+### 8. CloudBase / bson 在 RN 下的 polyfill
+
+- RN 环境下 `bson` 依赖 `process.getBuiltinModule` 和 `crypto.getRandomValues`
+- 已在 [app/polyfill.ts](file:///c:/Users/Hibiscus/Desktop/trae创意大赛/growth-companion-app/app/polyfill.ts) 注入最小 polyfill
+- 依赖 `react-native-get-random-values@~1.11.0` 提供 `crypto.getRandomValues`
+- **启动入口必须在最顶部导入 polyfill**：
+  - [app/_layout.tsx](file:///c:/Users/Hibiscus/Desktop/trae创意大赛/growth-companion-app/app/_layout.tsx) 第 1 行：`import './polyfill';`
+  - 随后导入：`import 'react-native-get-random-values';`
+- 其他文件不要再重复注入 `process.getBuiltinModule` polyfill，避免执行顺序问题
+
+### 9. 依赖安装建议
+
+- 升级/安装依赖后如遇 peer dependency 冲突，优先使用 `--legacy-peer-deps`
+- 安装完成后建议重启 Metro：`npm start`
+- 若仍异常，可尝试清缓存后启动：`npx expo start --clear`
+
 ## 开发约定
 
 ### 代码风格

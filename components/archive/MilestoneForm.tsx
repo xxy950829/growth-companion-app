@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { COLORS } from '@/utils/constants';
-import { MILESTONE_TYPE_CONFIG } from '@/types/archive';
+import { showDialog } from '@/stores/uiStore';
+import { MILESTONE_TYPE_CONFIG, SELECTABLE_MILESTONE_TYPES } from '@/types/archive';
 import type { Milestone, MilestoneType } from '@/types';
 import { pickImage, takePhoto, uploadImage } from '@/services/storage';
 import { formatDate } from '@/utils/helpers';
@@ -16,7 +17,7 @@ interface MilestoneFormProps {
 }
 
 export function MilestoneForm({ visible, onClose, onSubmit }: MilestoneFormProps) {
-  const [type, setType] = useState<MilestoneType>('first_steps');
+  const [type, setType] = useState<MilestoneType>('first_milestone');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [date, setDate] = useState(Date.now());
@@ -29,8 +30,13 @@ export function MilestoneForm({ visible, onClose, onSubmit }: MilestoneFormProps
   const [submitting, setSubmitting] = useState(false);
   const [uploading, setUploading] = useState(false);
 
+  // 每次打开表单时重置状态，避免上次数据残留
+  useEffect(() => {
+    if (visible) reset();
+  }, [visible]);
+
   const reset = () => {
-    setType('first_steps');
+    setType('first_milestone');
     setTitle('');
     setDescription('');
     setDate(Date.now());
@@ -42,7 +48,7 @@ export function MilestoneForm({ visible, onClose, onSubmit }: MilestoneFormProps
     setVaccineName('');
   };
 
-  // 选择并上传图片：CloudBase 启用时上传到云存储，否则保留本地 URI
+  // 选择并上传图片：上传到后端 COS，失败则保留本地 URI
   const pickAndUpload = async (source: 'camera' | 'library') => {
     try {
       const localUri = source === 'camera' ? await takePhoto() : await pickImage();
@@ -58,10 +64,10 @@ export function MilestoneForm({ visible, onClose, onSubmit }: MilestoneFormProps
   };
 
   const showImagePicker = () => {
-    Alert.alert('添加照片', '请选择来源', [
-      { text: '取消', style: 'cancel' },
-      { text: '拍照', onPress: () => pickAndUpload('camera') },
-      { text: '从相册选择', onPress: () => pickAndUpload('library') },
+    showDialog('添加照片', '请选择来源', [
+      { text: '拍照', onPress: () => pickAndUpload('camera'), variant: 'primary' },
+      { text: '相册', onPress: () => pickAndUpload('library'), variant: 'primary' },
+      { text: '取消' },
     ]);
   };
 
@@ -92,7 +98,7 @@ export function MilestoneForm({ visible, onClose, onSubmit }: MilestoneFormProps
         date,
         mediaUrls,
         tags,
-        ...(type === 'height' || type === 'weight'
+        ...(type === 'measurement'
           ? {
               height: height ? Number(height) : undefined,
               weight: weight ? Number(weight) : undefined,
@@ -136,7 +142,7 @@ export function MilestoneForm({ visible, onClose, onSubmit }: MilestoneFormProps
       <ScrollView showsVerticalScrollIndicator={false}>
         <Text style={styles.label}>里程碑类型</Text>
         <View style={styles.typeGrid}>
-          {(Object.keys(MILESTONE_TYPE_CONFIG) as MilestoneType[]).map((t) => {
+          {SELECTABLE_MILESTONE_TYPES.map((t) => {
             const cfg = MILESTONE_TYPE_CONFIG[t];
             const active = type === t;
             return (
@@ -174,7 +180,7 @@ export function MilestoneForm({ visible, onClose, onSubmit }: MilestoneFormProps
         />
 
         {/* 身高体重特有 */}
-        {(type === 'height' || type === 'weight') && (
+        {type === 'measurement' && (
           <View style={styles.row}>
             <Input
               label="身高(cm)"

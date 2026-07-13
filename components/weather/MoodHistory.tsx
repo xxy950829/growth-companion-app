@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, ListRenderItem } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { Card } from '@/components/ui/Card';
 import { COLORS } from '@/utils/constants';
 import { WEATHER_CONFIG } from '@/types/weather';
@@ -22,10 +22,10 @@ export function MoodHistory({ records, onDelete }: MoodHistoryProps) {
     );
   }
 
-  const renderItem: ListRenderItem<MoodRecord> = ({ item }) => {
+  const renderRecord = (item: MoodRecord) => {
     const cfg = WEATHER_CONFIG[item.weather];
     return (
-      <Card style={[styles.card, { borderLeftColor: cfg.color, borderLeftWidth: 4 }]}>
+      <Card key={item.id} style={[styles.card, { borderLeftColor: cfg.color, borderLeftWidth: 4 }]}>
         <View style={styles.row}>
           <Text style={styles.icon}>{cfg.icon}</Text>
           <View style={{ flex: 1 }}>
@@ -47,13 +47,9 @@ export function MoodHistory({ records, onDelete }: MoodHistoryProps) {
   };
 
   return (
-    <FlatList
-      data={records}
-      keyExtractor={(item) => item.id}
-      renderItem={renderItem}
-      contentContainerStyle={styles.list}
-      showsVerticalScrollIndicator={false}
-    />
+    <View style={styles.list}>
+      {records.map(renderRecord)}
+    </View>
   );
 }
 

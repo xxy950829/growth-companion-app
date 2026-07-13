@@ -2,7 +2,7 @@
 import { create } from 'zustand';
 import type { Habits, Task, TaskCompletion, PlanetState, PlanetLevel, CompletionMap } from '@/types';
 import { PLANET_LEVELS } from '@/types/planet';
-import * as db from '@/services/database';
+import * as db from '@/services/api-database';
 import { generateId, getTodayKey } from '@/utils/helpers';
 import { useAuthStore } from './authStore';
 import { EVENTS, logEvent } from '@/services/analytics';
@@ -65,9 +65,9 @@ export const usePlanetStore = create<PlanetStoreState>((set, get) => ({
       id: generateId('task'),
       isActive: true,
     };
-    await db.addTask(babyId, task);
+    const created = await db.addTask(babyId, task);
     const habits = get().habits || emptyHabits(babyId);
-    const updated: Habits = { ...habits, babyId, tasks: [...habits.tasks, task] };
+    const updated: Habits = { ...habits, babyId, tasks: [...habits.tasks, created] };
     set({ habits: updated });
   },
 
