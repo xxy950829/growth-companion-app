@@ -3,6 +3,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { useAuthStore } from '@/stores/authStore';
+import { FeedbackHost } from '@/components/ui/FeedbackHost';
 import { COLORS } from '@/utils/constants';
 
 export default function RootLayout() {
@@ -29,6 +30,7 @@ export default function RootLayout() {
           options={{ headerShown: true, title: '创建宝宝档案', headerBackTitle: '返回' }}
         />
       </Stack>
+      <FeedbackHost />
     </>
   );
 }

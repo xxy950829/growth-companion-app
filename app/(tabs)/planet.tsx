@@ -5,7 +5,6 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Alert,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { Header } from '@/components/ui/Header';
@@ -15,6 +14,7 @@ import { TaskItem } from '@/components/planet/TaskItem';
 import { TaskForm } from '@/components/planet/TaskForm';
 import { useAuthStore } from '@/stores/authStore';
 import { usePlanetStore } from '@/stores/planetStore';
+import { toast, confirm } from '@/stores/uiStore';
 import { COLORS } from '@/utils/constants';
 import { PLANET_LEVELS } from '@/types/planet';
 
@@ -43,7 +43,7 @@ export default function PlanetScreen() {
   const handleComplete = async (taskId: string) => {
     if (!currentBabyId) return;
     await completeTask(currentBabyId, taskId, 'parent');
-    Alert.alert('🎉', '任务完成！获得积分和星星');
+    toast.success('任务完成！获得积分和星星 🎉');
   };
 
   const handleUncomplete = async (taskId: string) => {
@@ -63,10 +63,7 @@ export default function PlanetScreen() {
 
   const handleDelete = (taskId: string) => {
     if (!currentBabyId) return;
-    Alert.alert('确认删除', '确定要删除这个任务吗？', [
-      { text: '取消', style: 'cancel' },
-      { text: '删除', style: 'destructive', onPress: () => deleteTask(currentBabyId, taskId) },
-    ]);
+    confirm('确认删除', '确定要删除这个任务吗？', () => deleteTask(currentBabyId, taskId), { danger: true });
   };
 
   const planetInfo = getPlanetInfo();
@@ -195,13 +192,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   todayCard: {
-    padding: 16,
+    padding: 18,
+    borderRadius: 20,
   },
   todayHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 10,
   },
   todayTitle: {
     fontSize: 15,
@@ -209,37 +207,37 @@ const styles = StyleSheet.create({
     color: COLORS.ink,
   },
   todayCount: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: '700',
-    color: COLORS.accent,
+    color: COLORS.accent2,
   },
   todayTrack: {
-    height: 10,
+    height: 12,
     backgroundColor: COLORS.bg2,
-    borderRadius: 5,
+    borderRadius: 6,
     overflow: 'hidden',
   },
   todayFill: {
     height: '100%',
     backgroundColor: COLORS.accent2,
-    borderRadius: 5,
+    borderRadius: 6,
   },
   todayTip: {
     fontSize: 12,
     color: COLORS.muted,
-    marginTop: 8,
+    marginTop: 10,
   },
   sectionTitle: {
     fontSize: 16,
     fontWeight: '600',
     color: COLORS.ink,
-    marginBottom: 10,
+    marginBottom: 12,
   },
   sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 12,
   },
   addBtn: {
     color: COLORS.accent,
@@ -248,24 +246,24 @@ const styles = StyleSheet.create({
   },
   levelChip: {
     width: 100,
-    padding: 12,
-    borderRadius: 12,
+    padding: 14,
+    borderRadius: 16,
     backgroundColor: COLORS.cardBg,
     marginRight: 10,
     alignItems: 'center',
-    borderWidth: 1.5,
+    borderWidth: 2,
     borderColor: COLORS.rule,
   },
   levelChipCurrent: {
     borderColor: COLORS.accent,
-    backgroundColor: COLORS.accent + '15',
+    backgroundColor: COLORS.accent + '10',
   },
   levelChipLocked: {
-    opacity: 0.5,
+    opacity: 0.45,
   },
   levelChipEmoji: {
-    fontSize: 28,
-    marginBottom: 4,
+    fontSize: 30,
+    marginBottom: 6,
   },
   levelChipName: {
     fontSize: 13,
@@ -280,25 +278,29 @@ const styles = StyleSheet.create({
   levelChipExp: {
     fontSize: 10,
     color: COLORS.accent,
-    marginTop: 4,
+    marginTop: 6,
+    fontWeight: '600',
   },
   empty: {
     alignItems: 'center',
-    padding: 32,
+    padding: 36,
+    borderRadius: 20,
   },
   emptyIcon: {
-    fontSize: 40,
-    marginBottom: 8,
+    fontSize: 48,
+    marginBottom: 12,
   },
   emptyText: {
-    fontSize: 13,
+    fontSize: 14,
     color: COLORS.muted,
     textAlign: 'center',
+    lineHeight: 20,
   },
   inactiveTitle: {
     fontSize: 13,
     color: COLORS.muted,
-    marginTop: 12,
-    marginBottom: 6,
+    marginTop: 16,
+    marginBottom: 8,
+    paddingLeft: 4,
   },
 });

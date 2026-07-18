@@ -51,7 +51,7 @@ export const WEATHER_CONFIG: Record<
   cloudy: {
     label: '多云',
     icon: '⛅',
-    color: '#A8D4E6',
+    color: '#FFE0A3',
     mood: '平静',
     description: '今天心情一般，比较平静',
     score: 4,
@@ -67,7 +67,7 @@ export const WEATHER_CONFIG: Record<
   thunderstorm: {
     label: '雷阵雨',
     icon: '⛈️',
-    color: '#8B5CF6',
+    color: '#9B8AA5',
     mood: '烦躁',
     description: '今天很烦躁，发脾气了',
     score: 1,

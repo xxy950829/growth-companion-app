@@ -1,7 +1,8 @@
 // 成长档案状态管理
 import { create } from 'zustand';
 import type { Archive, Milestone, MilestoneType, GrowthStats } from '@/types';
-import * as db from '@/services/database';
+import { isMeasurementType, isFirstMilestoneType } from '@/types/archive';
+import * as db from '@/services/api-database';
 import { generateId } from '@/utils/helpers';
 import { useAuthStore } from './authStore';
 
@@ -26,10 +27,9 @@ function calcStats(milestones: Milestone[]): GrowthStats {
   };
   for (const m of milestones) {
     stats.milestonesByType[m.type] = (stats.milestonesByType[m.type] || 0) + 1;
-    if (m.type === 'first_steps' && !stats.firstStepsDate) stats.firstStepsDate = m.date;
-    if (m.type === 'first_words' && !stats.firstWordsDate) stats.firstWordsDate = m.date;
-    if (m.type === 'weight') stats.lastWeight = m.weight;
-    if (m.type === 'height') stats.lastHeight = m.height;
+    // 基于字段统计最新身高体重（取第一条有值的，milestones 按 date 降序），兼容历史 height/weight 类型
+    if (stats.lastHeight == null && m.height != null) stats.lastHeight = m.height;
+    if (stats.lastWeight == null && m.weight != null) stats.lastWeight = m.weight;
   }
   return stats;
 }
@@ -55,6 +55,8 @@ export const useArchiveStore = create<ArchiveState>((set, get) => ({
     set({ loading: true });
     try {
       const archive = (await db.loadArchive(babyId)) || emptyArchive(babyId);
+      // 确保按日期倒序排列（最新的在最前面）
+      archive.milestones = [...archive.milestones].sort((a, b) => b.date - a.date);
       set({ archive });
     } finally {
       set({ loading: false });
@@ -69,11 +71,11 @@ export const useArchiveStore = create<ArchiveState>((set, get) => ({
       createdBy: user?.uid || 'anonymous',
       createdAt: Date.now(),
     };
-    // 写入数据库（CloudBase 或本地）
-    await db.addMilestone(babyId, milestone);
+    // 后端创建并返回真实数据（含后端生成的 id）
+    const created = await db.addMilestone(babyId, milestone);
     // 更新本地状态
     const archive = get().archive || emptyArchive(babyId);
-    const milestones = [milestone, ...archive.milestones];
+    const milestones = [created, ...archive.milestones];
     const updated: Archive = {
       ...archive,
       babyId,
@@ -104,7 +106,15 @@ export const useArchiveStore = create<ArchiveState>((set, get) => ({
     if (!archive) return [];
     let list = archive.milestones;
     if (filterType !== 'all') {
-      list = list.filter((m) => m.type === filterType);
+      // 筛选身高体重时，同时匹配历史 height/weight 类型数据
+      // 筛选"宝宝的第一次"时，同时匹配历史 first_steps/first_words 类型数据
+      list = list.filter((m) =>
+        filterType === 'measurement'
+          ? isMeasurementType(m.type)
+          : filterType === 'first_milestone'
+            ? isFirstMilestoneType(m.type)
+            : m.type === filterType
+      );
     }
     if (searchKeyword.trim()) {
       const kw = searchKeyword.trim().toLowerCase();

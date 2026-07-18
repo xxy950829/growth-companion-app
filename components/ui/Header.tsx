@@ -1,8 +1,9 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useAuthStore } from '@/stores/authStore';
-import { COLORS, GENDER_CONFIG } from '@/utils/constants';
+import { COLORS } from '@/utils/constants';
 import { formatAge } from '@/utils/helpers';
+import { BabyAvatar } from './BabyAvatar';
 
 interface HeaderProps {
   title: string;
@@ -26,7 +27,7 @@ export function Header({ title, subtitle, right }: HeaderProps) {
       <View style={styles.left}>
         <TouchableOpacity onPress={handleSwitch} disabled={babies.length <= 1} activeOpacity={0.7}>
           <View style={styles.babyInfo}>
-            <Text style={styles.babyIcon}>{baby ? GENDER_CONFIG[baby.gender].icon : '👶'}</Text>
+            <BabyAvatar baby={baby} size={40} style={styles.babyIcon} />
             <View>
               <Text style={styles.babyName}>{baby?.name || '未设置'}</Text>
               <Text style={styles.babyAge}>
@@ -63,7 +64,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   babyIcon: {
-    fontSize: 36,
     marginRight: 10,
   },
   babyName: {

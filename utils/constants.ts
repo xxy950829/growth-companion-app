@@ -9,7 +9,7 @@ export const COLORS = {
   rule: '#E8D5C4',
   accent: '#FF8C5A',
   accent2: '#7BC9A6',
-  accent3: '#A8D4E6',
+  accent3: '#FFE0A3',
   cardBg: '#FFFFFF',
   shadow: 'rgba(74, 55, 40, 0.08)',
   success: '#22C55E',
@@ -25,6 +25,8 @@ export const STORAGE_KEYS = {
   HABITS: 'gc_habits', // gc_habits_{babyId}
   MOODS: 'gc_moods', // gc_moods_{babyId}
   CURRENT_BABY: 'gc_current_baby',
+  ACCESS_TOKEN: 'gc_access_token', // 后端 API 访问令牌
+  REFRESH_TOKEN: 'gc_refresh_token', // 后端 API 刷新令牌
 } as const;
 
 // 默认宝宝头像
@@ -32,7 +34,7 @@ export const DEFAULT_BABY_AVATAR = '👶';
 
 // 性别配置
 export const GENDER_CONFIG = {
-  male: { label: '男宝宝', icon: '👦', color: '#A8D4E6' },
+  male: { label: '男宝宝', icon: '👦', color: '#7BC9A6' },
   female: { label: '女宝宝', icon: '👧', color: '#FF8C5A' },
   unknown: { label: '保密', icon: '👶', color: '#8B7355' },
 } as const;

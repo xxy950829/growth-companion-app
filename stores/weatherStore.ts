@@ -2,7 +2,7 @@
 import { create } from 'zustand';
 import type { Moods, MoodRecord, WeatherType, Temperature, MoodStatistics } from '@/types';
 import { WEATHER_CONFIG } from '@/types/weather';
-import * as db from '@/services/database';
+import * as db from '@/services/api-database';
 import { generateId } from '@/utils/helpers';
 import { EVENTS, logEvent } from '@/services/analytics';
 
@@ -84,6 +84,8 @@ export const useWeatherStore = create<WeatherStoreState>((set, get) => ({
     set({ loading: true });
     try {
       const moods = (await db.loadMoods(babyId)) || emptyMoods(babyId);
+      // 确保按日期倒序排列（最新的在最前面）
+      moods.records = [...moods.records].sort((a, b) => b.date - a.date);
       set({ moods });
     } finally {
       set({ loading: false });
@@ -97,15 +99,15 @@ export const useWeatherStore = create<WeatherStoreState>((set, get) => ({
       createdBy: 'parent',
       createdAt: Date.now(),
     };
+    const created = await db.addMoodRecord(babyId, record);
     const moods = get().moods || emptyMoods(babyId);
-    const records = [record, ...moods.records];
+    const records = [created, ...moods.records];
     const updated: Moods = {
       ...moods,
       babyId,
       records,
       statistics: calcStats(records),
     };
-    await db.addMoodRecord(babyId, record);
     set({ moods: updated });
     logEvent(EVENTS.RECORD_MOOD, { weather: data.weather });
   },

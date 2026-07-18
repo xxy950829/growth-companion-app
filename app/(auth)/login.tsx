@@ -6,12 +6,12 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  Alert,
 } from 'react-native';
 import { Link, router } from 'expo-router';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useAuthStore } from '@/stores/authStore';
+import { toast } from '@/stores/uiStore';
 import { COLORS } from '@/utils/constants';
 import { validateEmail, validatePassword } from '@/utils/validators';
 import { EVENTS, logEvent, setUserProperty } from '@/services/analytics';
@@ -40,7 +40,7 @@ export default function LoginScreen() {
       setUserProperty('lastLoginAt', String(Date.now()));
       router.replace('/');
     } catch (e) {
-      Alert.alert('登录失败', (e as Error).message);
+      toast.error((e as Error).message);
     }
   };
 
@@ -79,7 +79,7 @@ export default function LoginScreen() {
             <Text style={styles.error}>{formError || error}</Text>
           )}
 
-          <Button title="登录" onPress={handleLogin} loading={loading} style={styles.btn} />
+          <Button title="登录" onPress={handleLogin} loading={loading} size="lg" style={styles.btn} />
 
           <View style={styles.footer}>
             <Text style={styles.footerText}>还没有账号？</Text>
@@ -126,7 +126,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   btn: {
-    marginTop: 8,
+    marginTop: 16,
+    width: '100%',
   },
   error: {
     color: COLORS.danger,

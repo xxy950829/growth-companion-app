@@ -20,7 +20,7 @@ export function PlanetView({ level, experience, stars }: PlanetViewProps) {
   return (
     <Card style={styles.card}>
       <View style={styles.planetWrap}>
-        <View style={[styles.glow, { backgroundColor: current.appearance === '🪐' ? '#8B5CF6' : COLORS.accent2 }]} />
+        <View style={[styles.glow, { backgroundColor: COLORS.accent2 }]} />
         <Text style={styles.planetEmoji}>{current.appearance}</Text>
       </View>
 
@@ -55,57 +55,59 @@ export function PlanetView({ level, experience, stars }: PlanetViewProps) {
 const styles = StyleSheet.create({
   card: {
     alignItems: 'center',
-    paddingVertical: 24,
+    paddingVertical: 28,
     marginBottom: 16,
+    borderRadius: 24,
   },
   planetWrap: {
-    width: 140,
-    height: 140,
-    borderRadius: 70,
+    width: 160,
+    height: 160,
+    borderRadius: 80,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 12,
+    marginBottom: 16,
     position: 'relative',
   },
   glow: {
     position: 'absolute',
-    width: 140,
-    height: 140,
-    borderRadius: 70,
-    opacity: 0.2,
+    width: 160,
+    height: 160,
+    borderRadius: 80,
+    opacity: 0.25,
   },
   planetEmoji: {
-    fontSize: 72,
+    fontSize: 80,
   },
   levelName: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: '700',
     color: COLORS.ink,
   },
   levelReward: {
-    fontSize: 12,
+    fontSize: 13,
     color: COLORS.muted,
-    marginTop: 4,
+    marginTop: 6,
   },
   progressWrap: {
     width: '100%',
-    marginTop: 16,
+    marginTop: 20,
+    paddingHorizontal: 20,
   },
   progressTrack: {
-    height: 10,
+    height: 12,
     backgroundColor: COLORS.bg2,
-    borderRadius: 5,
+    borderRadius: 6,
     overflow: 'hidden',
   },
   progressFill: {
     height: '100%',
     backgroundColor: COLORS.accent,
-    borderRadius: 5,
+    borderRadius: 6,
   },
   progressInfo: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 6,
+    marginTop: 8,
   },
   progressText: {
     fontSize: 12,
@@ -119,24 +121,24 @@ const styles = StyleSheet.create({
   starsRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 12,
-    backgroundColor: '#FEF9E7',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 16,
+    marginTop: 16,
+    backgroundColor: COLORS.accent3 + '60',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 20,
   },
   starIcon: {
-    fontSize: 18,
-    marginRight: 6,
+    fontSize: 20,
+    marginRight: 8,
   },
   starsValue: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: '700',
-    color: COLORS.warning,
-    marginRight: 4,
+    color: '#D4940A',
+    marginRight: 6,
   },
   starsLabel: {
-    fontSize: 12,
+    fontSize: 13,
     color: COLORS.muted,
   },
 });

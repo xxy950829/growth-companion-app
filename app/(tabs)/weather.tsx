@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { Header } from '@/components/ui/Header';
 import { Card } from '@/components/ui/Card';
@@ -8,6 +8,7 @@ import { MoodForm } from '@/components/weather/MoodForm';
 import { MoodHistory } from '@/components/weather/MoodHistory';
 import { useAuthStore } from '@/stores/authStore';
 import { useWeatherStore } from '@/stores/weatherStore';
+import { confirm } from '@/stores/uiStore';
 import { COLORS } from '@/utils/constants';
 import { WEATHER_CONFIG } from '@/types/weather';
 import type { WeatherType } from '@/types';
@@ -30,10 +31,7 @@ export default function WeatherScreen() {
 
   const handleDelete = (id: string) => {
     if (!currentBabyId) return;
-    Alert.alert('确认删除', '确定要删除这条心情记录吗？', [
-      { text: '取消', style: 'cancel' },
-      { text: '删除', style: 'destructive', onPress: () => deleteMood(currentBabyId, id) },
-    ]);
+    confirm('确认删除', '确定要删除这条心情记录吗？', () => deleteMood(currentBabyId, id), { danger: true });
   };
 
   const stats = getStatistics();
@@ -79,15 +77,15 @@ export default function WeatherScreen() {
         <View style={{ paddingHorizontal: 16, marginBottom: 16 }}>
           <Text style={styles.sectionTitle}>情绪统计</Text>
           <View style={styles.statsRow}>
-            <Card style={[styles.statCard, { backgroundColor: COLORS.accent + '15' }]}>
+            <Card style={[styles.statCard, { backgroundColor: COLORS.accent + '12' }]}>
               <Text style={styles.statValue}>{stats.totalRecords}</Text>
               <Text style={styles.statLabel}>总记录</Text>
             </Card>
-            <Card style={[styles.statCard, { backgroundColor: COLORS.accent2 + '15' }]}>
+            <Card style={[styles.statCard, { backgroundColor: COLORS.accent2 + '12' }]}>
               <Text style={styles.statValue}>{stats.averageMood}</Text>
               <Text style={styles.statLabel}>平均分</Text>
             </Card>
-            <Card style={[styles.statCard, { backgroundColor: COLORS.accent3 + '30' }]}>
+            <Card style={[styles.statCard, { backgroundColor: COLORS.accent3 + '40' }]}>
               <Text style={styles.statValue}>{stats.mostFrequent ? WEATHER_CONFIG[stats.mostFrequent].icon : '-'}</Text>
               <Text style={styles.statLabel}>最常见</Text>
             </Card>
@@ -148,35 +146,37 @@ const styles = StyleSheet.create({
   },
   todayCard: {
     alignItems: 'center',
-    padding: 20,
+    padding: 24,
+    borderRadius: 20,
   },
   todayTitle: {
     fontSize: 14,
     color: COLORS.muted,
-    marginBottom: 12,
+    marginBottom: 16,
   },
   todayBottleWrap: {
-    marginVertical: 8,
+    marginVertical: 12,
   },
   todayNote: {
     fontSize: 14,
     color: COLORS.ink,
     fontStyle: 'italic',
     textAlign: 'center',
-    marginTop: 12,
+    marginTop: 16,
     paddingHorizontal: 16,
+    lineHeight: 22,
   },
   trend: {
     fontSize: 13,
-    color: COLORS.accent,
-    marginTop: 12,
-    fontWeight: '500',
+    color: COLORS.accent2,
+    marginTop: 16,
+    fontWeight: '600',
   },
   sectionTitle: {
     fontSize: 16,
     fontWeight: '600',
     color: COLORS.ink,
-    marginBottom: 10,
+    marginBottom: 12,
   },
   statsRow: {
     flexDirection: 'row',
@@ -186,79 +186,81 @@ const styles = StyleSheet.create({
   statCard: {
     flex: 1,
     alignItems: 'center',
-    paddingVertical: 14,
+    paddingVertical: 16,
+    borderRadius: 16,
   },
   statValue: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: '700',
     color: COLORS.ink,
   },
   statLabel: {
     fontSize: 11,
     color: COLORS.muted,
-    marginTop: 2,
+    marginTop: 4,
   },
   distCard: {
-    padding: 16,
+    padding: 18,
+    borderRadius: 20,
   },
   distTitle: {
     fontSize: 14,
     fontWeight: '600',
     color: COLORS.ink,
-    marginBottom: 12,
+    marginBottom: 14,
   },
   distRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 12,
   },
   distIcon: {
-    fontSize: 18,
-    width: 28,
+    fontSize: 20,
+    width: 32,
   },
   distLabel: {
     fontSize: 12,
     color: COLORS.muted,
-    width: 50,
+    width: 56,
   },
   distBarWrap: {
     flex: 1,
-    height: 12,
+    height: 14,
     backgroundColor: COLORS.bg2,
-    borderRadius: 6,
+    borderRadius: 7,
     overflow: 'hidden',
-    marginHorizontal: 8,
+    marginHorizontal: 10,
   },
   distBar: {
     height: '100%',
-    borderRadius: 6,
+    borderRadius: 7,
   },
   distCount: {
-    fontSize: 12,
+    fontSize: 13,
     color: COLORS.ink,
     fontWeight: '600',
-    width: 24,
+    width: 28,
     textAlign: 'right',
   },
   fab: {
     position: 'absolute',
     right: 20,
     bottom: 24,
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
     backgroundColor: COLORS.accent,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: COLORS.accent,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.4,
-    shadowRadius: 8,
-    elevation: 4,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.35,
+    shadowRadius: 12,
+    elevation: 6,
   },
   fabText: {
     color: '#FFFFFF',
-    fontSize: 28,
+    fontSize: 30,
     fontWeight: '300',
     marginTop: -2,
   },

@@ -1,0 +1,1619 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>童伴星球 - UI重设计</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style id="theme-vars">
+      :root {
+        --brand-50: #FDF2EE;
+        --brand-100: #FAE2D9;
+        --brand-200: #F4C3B2;
+        --brand-300: #ECA086;
+        --brand-400: #E28260;
+        --brand-500: #D4725C;
+        --brand-600: #BF5A44;
+        --brand-700: #9E4534;
+        --brand-800: #7E372A;
+        --brand-900: #5C2820;
+        --sage-50: #F1F4EF;
+        --sage-100: #DDE6D7;
+        --sage-200: #BDCEB3;
+        --sage-300: #9AB38D;
+        --sage-400: #7D9A70;
+        --sage-500: #68835B;
+        --sage-600: #526948;
+        --sand-50: #FBF8F3;
+        --sand-100: #F5EFE6;
+        --sand-200: #EDE3D3;
+        --sand-300: #E0D1BB;
+        --sand-400: #D0BA9E;
+        --sand-500: #B89F7E;
+        --honey-400: #E8B84B;
+        --honey-500: #D9A238;
+        --background-50: #FDFBF8;
+        --background-100: #FAF6F1;
+        --background-200: #F5EEE5;
+        --background-300: #EBE2D6;
+        --background-400: #D9CDBD;
+        --background-500: #B8A994;
+        --text-50: #FBF8F4;
+        --text-100: #F0EAE0;
+        --text-200: #DDD3C4;
+        --text-300: #C4B8A5;
+        --text-400: #9A8B76;
+        --text-500: #6E6050;
+        --text-600: #4D4238;
+        --text-700: #3A3029;
+        --text-800: #2D2420;
+        --text-900: #1C1613;
+        --state-success: #6A9B5E;
+        --state-success-surface: #EDF3EA;
+        --state-warning: #D9A238;
+        --state-warning-surface: #FBF3E2;
+        --state-error: #C4533F;
+        --state-error-surface: #F9ECE8;
+        --state-info: #B89F7E;
+        --state-info-surface: #F5EFE6;
+        --background: var(--background-100);
+        --foreground: var(--text-800);
+        --card: #FFFFFF;
+        --card-foreground: var(--text-800);
+        --popover: #FFFFFF;
+        --popover-foreground: var(--text-800);
+        --primary: var(--brand-500);
+        --primary-foreground: #FFFFFF;
+        --primary-soft: var(--brand-50);
+        --muted: var(--background-200);
+        --muted-foreground: var(--text-400);
+        --destructive: var(--state-error);
+        --destructive-foreground: #FFFFFF;
+        --success: var(--state-success);
+        --success-foreground: #FFFFFF;
+        --border: var(--background-300);
+        --input: var(--background-300);
+        --ring: var(--brand-400);
+        --icon: var(--text-700);
+        --icon-muted: var(--text-400);
+        --font-sans: -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
+        --font-display: "SF Pro Display", -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
+        --font-mono: ui-monospace, "SF Mono", monospace;
+        --radius-sm: 4px;
+        --radius-md: 8px;
+        --radius-lg: 12px;
+        --radius-xl: 16px;
+        --radius-full: 9999px;
+        --shadow-2xs: 0 1px 2px -1px rgba(45, 36, 32, 0.03);
+        --shadow-xs: 0 1px 2px 0 rgba(45, 36, 32, 0.03);
+        --shadow-sm: 0 1px 3px 0 rgba(45, 36, 32, 0.04), 0 1px 2px -1px rgba(45, 36, 32, 0.03);
+        --shadow: 0 2px 6px -2px rgba(45, 36, 32, 0.05), 0 1px 3px -1px rgba(45, 36, 32, 0.03);
+        --shadow-md: 0 4px 12px -4px rgba(45, 36, 32, 0.05), 0 2px 4px -2px rgba(45, 36, 32, 0.03);
+        --shadow-lg: 0 8px 24px -8px rgba(45, 36, 32, 0.08), 0 4px 8px -4px rgba(45, 36, 32, 0.04);
+        --shadow-xl: 0 16px 40px -12px rgba(45, 36, 32, 0.10), 0 8px 16px -8px rgba(45, 36, 32, 0.05);
+        --shadow-2xl: 0 24px 56px -16px rgba(45, 36, 32, 0.12);
+        --phone-width: 390px;
+        --phone-height: 844px;
+        --phone-radius: 48px;
+      }
+    </style>
+    <style>
+      @theme inline {
+        --color-background: var(--background);
+        --color-foreground: var(--foreground);
+        --color-card: var(--card);
+        --color-card-foreground: var(--card-foreground);
+        --color-popover: var(--popover);
+        --color-popover-foreground: var(--popover-foreground);
+        --color-primary: var(--primary);
+        --color-primary-foreground: var(--primary-foreground);
+        --color-muted: var(--muted);
+        --color-muted-foreground: var(--muted-foreground);
+        --color-destructive: var(--destructive);
+        --color-destructive-foreground: var(--destructive-foreground);
+        --color-border: var(--border);
+        --color-input: var(--input);
+        --color-ring: var(--ring);
+        --color-brand-50: var(--brand-50);
+        --color-brand-100: var(--brand-100);
+        --color-brand-200: var(--brand-200);
+        --color-brand-300: var(--brand-300);
+        --color-brand-400: var(--brand-400);
+        --color-brand-500: var(--brand-500);
+        --color-brand-600: var(--brand-600);
+        --color-sand-50: var(--sand-50);
+        --color-sand-100: var(--sand-100);
+        --color-sand-200: var(--sand-200);
+        --color-sand-300: var(--sand-300);
+        --color-sage-50: var(--sage-50);
+        --color-sage-100: var(--sage-100);
+        --color-sage-300: var(--sage-300);
+        --color-sage-500: var(--sage-500);
+        --color-honey-400: var(--honey-400);
+        --color-honey-500: var(--honey-500);
+        --color-text-400: var(--text-400);
+        --color-text-500: var(--text-500);
+        --color-text-600: var(--text-600);
+        --color-text-700: var(--text-700);
+        --color-state-success: var(--state-success);
+        --color-state-success-surface: var(--state-success-surface);
+        --color-state-warning: var(--state-warning);
+        --color-state-warning-surface: var(--state-warning-surface);
+        --color-state-error: var(--state-error);
+        --color-state-error-surface: var(--state-error-surface);
+        --color-background-50: var(--background-50);
+        --color-background-100: var(--background-100);
+        --color-background-200: var(--background-200);
+        --color-background-300: var(--background-300);
+        --radius-sm: var(--radius-sm);
+        --radius-md: var(--radius-md);
+        --radius-lg: var(--radius-lg);
+        --radius-xl: var(--radius-xl);
+        --radius-full: var(--radius-full);
+      }
+    </style>
+    <style>
+      @layer base {
+        * {
+          border-color: var(--border);
+        }
+        body {
+          background-color: var(--background);
+          color: var(--foreground);
+          font-family: var(--font-sans);
+        }
+      }
+    </style>
+    <style>
+      /* ========== SHOWCASE LAYOUT ========== */
+      .showcase-page {
+        background: var(--background-50);
+        background-image:
+          radial-gradient(ellipse 800px 600px at 10% 0%, var(--brand-50) 0%, transparent 60%),
+          radial-gradient(ellipse 600px 500px at 90% 20%, var(--sand-100) 0%, transparent 55%),
+          radial-gradient(ellipse 700px 500px at 50% 100%, var(--sage-50) 0%, transparent 60%);
+        min-height: 100vh;
+      }
+      .showcase-header {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 80px 32px 48px;
+        text-align: center;
+      }
+      .showcase-title {
+        font-family: var(--font-display);
+        font-size: 48px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        color: var(--text-800);
+        margin-bottom: 12px;
+      }
+      .showcase-subtitle {
+        font-size: 17px;
+        color: var(--text-500);
+        max-width: 520px;
+        margin: 0 auto 32px;
+        line-height: 1.6;
+      }
+      .showcase-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        background: var(--card);
+        border-radius: var(--radius-full);
+        font-size: 13px;
+        color: var(--brand-600);
+        font-weight: 500;
+        box-shadow: var(--shadow-sm);
+        margin-bottom: 24px;
+      }
+      .showcase-grid {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 32px 100px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 48px 32px;
+        justify-items: center;
+      }
+      .phone-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+      }
+      .phone-label {
+        text-align: center;
+      }
+      .phone-label-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text-700);
+        margin-bottom: 4px;
+      }
+      .phone-label-desc {
+        font-size: 13px;
+        color: var(--text-400);
+      }
+
+      /* ========== PHONE FRAME ========== */
+      .phone-frame {
+        width: var(--phone-width);
+        height: var(--phone-height);
+        background: #1C1613;
+        border-radius: var(--phone-radius);
+        padding: 12px;
+        box-shadow:
+          0 40px 80px -20px rgba(45, 36, 32, 0.25),
+          0 20px 40px -10px rgba(45, 36, 32, 0.15),
+          inset 0 0 0 1px rgba(255,255,255,0.08);
+        position: relative;
+        flex-shrink: 0;
+      }
+      .phone-screen {
+        width: 100%;
+        height: 100%;
+        background: var(--background);
+        border-radius: calc(var(--phone-radius) - 12px);
+        overflow: hidden;
+        position: relative;
+      }
+      .phone-notch {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 120px;
+        height: 32px;
+        background: #1C1613;
+        border-radius: 0 0 20px 20px;
+        z-index: 50;
+      }
+      .phone-notch::before {
+        content: '';
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 10px;
+        height: 10px;
+        background: #2D2420;
+        border-radius: 50%;
+        box-shadow: inset 0 0 2px rgba(0,0,0,0.5);
+      }
+      .phone-notch::after {
+        content: '';
+        position: absolute;
+        top: 8px;
+        right: 28px;
+        width: 6px;
+        height: 6px;
+        background: #2D2420;
+        border-radius: 50%;
+      }
+      .status-bar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 28px;
+        z-index: 40;
+        padding-top: 14px;
+      }
+      .status-bar.dark-statusbar {
+        color: #fff;
+      }
+      .status-time {
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+      }
+      .status-icons {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .home-indicator {
+        position: absolute;
+        bottom: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 134px;
+        height: 5px;
+        background: var(--text-800);
+        border-radius: var(--radius-full);
+        z-index: 50;
+        opacity: 0.2;
+      }
+      .home-indicator.light-indicator {
+        background: #fff;
+        opacity: 0.6;
+      }
+
+      /* ========== SCREEN CONTENT SCROLL ========== */
+      .screen-scroll {
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-top: 50px;
+        padding-bottom: 90px;
+      }
+      .screen-scroll.no-tabbar {
+        padding-bottom: 0;
+      }
+      .screen-scroll::-webkit-scrollbar { display: none; }
+
+      /* ========== BOTTOM TAB BAR ========== */
+      .tab-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 80px;
+        background: rgba(255,255,255,0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-top: 1px solid var(--border);
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-around;
+        padding-top: 10px;
+        z-index: 40;
+      }
+      .tab-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        font-size: 10px;
+        color: var(--text-400);
+        font-weight: 500;
+        cursor: pointer;
+        transition: color 0.2s;
+      }
+      .tab-item.active {
+        color: var(--primary);
+      }
+      .tab-item i {
+        width: 24px;
+        height: 24px;
+      }
+
+      /* ========== BLOB DECORATIONS ========== */
+      .blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(40px);
+        opacity: 0.5;
+        pointer-events: none;
+      }
+      .blob-terracotta {
+        background: var(--brand-300);
+      }
+      .blob-sand {
+        background: var(--sand-300);
+      }
+      .blob-sage {
+        background: var(--sage-200);
+      }
+      .blob-honey {
+        background: var(--honey-400);
+      }
+
+      /* ========== FAB BUTTON ========== */
+      .fab-btn {
+        position: absolute;
+        right: 20px;
+        bottom: 100px;
+        width: 56px;
+        height: 56px;
+        border-radius: var(--radius-full);
+        background: var(--primary);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 8px 24px -4px rgba(212, 114, 92, 0.45), 0 4px 8px -2px rgba(212, 114, 92, 0.2);
+        z-index: 30;
+        transition: transform 0.2s;
+      }
+      .fab-btn:hover { transform: scale(1.05); }
+
+      /* ========== BUTTONS ========== */
+      .btn-primary {
+        width: 100%;
+        height: 52px;
+        border-radius: var(--radius-xl);
+        background: var(--primary);
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        box-shadow: 0 4px 14px -2px rgba(212, 114, 92, 0.35);
+        transition: all 0.2s;
+        cursor: pointer;
+        border: none;
+      }
+      .btn-primary:hover {
+        background: var(--brand-600);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px -2px rgba(212, 114, 92, 0.4);
+      }
+      .btn-secondary {
+        width: 100%;
+        height: 52px;
+        border-radius: var(--radius-xl);
+        background: var(--card);
+        color: var(--text-700);
+        font-size: 16px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border: 1px solid var(--border);
+        transition: all 0.2s;
+        cursor: pointer;
+      }
+      .btn-secondary:hover {
+        background: var(--background-100);
+      }
+      .btn-wechat {
+        background: var(--sage-500);
+        color: #fff;
+        border: none;
+      }
+      .btn-wechat:hover {
+        background: var(--sage-600);
+      }
+      .btn-ghost {
+        background: transparent;
+        color: var(--text-400);
+        border: none;
+        font-size: 14px;
+        padding: 8px 16px;
+        cursor: pointer;
+        border-radius: var(--radius-md);
+        transition: color 0.2s;
+      }
+      .btn-ghost:hover { color: var(--text-600); }
+
+      /* ========== INPUT ========== */
+      .input-field {
+        width: 100%;
+        height: 52px;
+        border-radius: var(--radius-xl);
+        background: var(--card);
+        border: 1px solid var(--border);
+        padding: 0 20px;
+        font-size: 15px;
+        color: var(--text-700);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: border-color 0.2s;
+      }
+      .input-field:focus-within {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px var(--brand-50);
+      }
+      .input-field input {
+        flex: 1;
+        background: transparent;
+        border: none;
+        outline: none;
+        font-size: 15px;
+        color: var(--text-700);
+        font-family: inherit;
+      }
+      .input-field input::placeholder { color: var(--text-300); }
+
+      /* ========== CARDS ========== */
+      .card {
+        background: var(--card);
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow-sm);
+        border: 1px solid rgba(235, 226, 214, 0.6);
+      }
+      .card-soft {
+        background: var(--background-50);
+        border-radius: var(--radius-xl);
+        border: 1px solid var(--border);
+      }
+
+      /* ========== PAGE DOTS ========== */
+      .page-dots {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+      }
+      .page-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: var(--radius-full);
+        background: var(--background-300);
+        transition: all 0.3s;
+      }
+      .page-dot.active {
+        width: 24px;
+        background: var(--primary);
+      }
+
+      /* ========== STAR MAP (GROWTH PLANET) ========== */
+      .star-map-bg {
+        background:
+          radial-gradient(ellipse at 30% 20%, rgba(212, 114, 92, 0.08) 0%, transparent 50%),
+          radial-gradient(ellipse at 70% 60%, rgba(184, 159, 126, 0.08) 0%, transparent 50%),
+          linear-gradient(180deg, var(--sand-50) 0%, var(--background-50) 100%);
+      }
+      .constellation-line {
+        stroke: var(--brand-200);
+        stroke-width: 1.5;
+        stroke-dasharray: 4 3;
+        fill: none;
+      }
+      .star-node {
+        cursor: pointer;
+        transition: transform 0.2s;
+      }
+      .star-node:hover { transform: scale(1.15); }
+      .star-core {
+        fill: var(--primary);
+      }
+      .star-glow {
+        fill: var(--brand-200);
+        opacity: 0.3;
+      }
+      .star-node.dim .star-core { fill: var(--sand-400); }
+      .star-node.dim .star-glow { fill: var(--sand-200); opacity: 0.4; }
+
+      /* ========== MOOD SELECTOR ========== */
+      .mood-btn {
+        width: 52px;
+        height: 52px;
+        border-radius: var(--radius-full);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        background: var(--card);
+        border: 2px solid transparent;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: var(--shadow-xs);
+      }
+      .mood-btn.active {
+        border-color: var(--primary);
+        background: var(--brand-50);
+        transform: scale(1.1);
+      }
+
+      /* ========== AGE TABS ========== */
+      .age-tabs {
+        display: flex;
+        gap: 6px;
+        padding: 4px;
+        background: var(--background-200);
+        border-radius: var(--radius-full);
+      }
+      .age-tab {
+        padding: 6px 14px;
+        border-radius: var(--radius-full);
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-500);
+        cursor: pointer;
+        transition: all 0.2s;
+        white-space: nowrap;
+      }
+      .age-tab.active {
+        background: var(--card);
+        color: var(--primary);
+        box-shadow: var(--shadow-xs);
+      }
+
+      /* ========== PROFILE MENU ========== */
+      .menu-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 16px 20px;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .menu-item:hover { background: var(--background-50); }
+      .menu-icon-wrap {
+        width: 40px;
+        height: 40px;
+        border-radius: var(--radius-lg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .menu-item:not(:last-child) {
+        border-bottom: 1px solid var(--border);
+      }
+
+      /* ========== MILESTONE CARD IMAGE PLACEHOLDER ========== */
+      .milestone-photo {
+        border-radius: var(--radius-lg);
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* ========== DECORATIVE PLANET (SPLASH) ========== */
+      @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-12px); }
+      }
+      @keyframes twinkle {
+        0%, 100% { opacity: 0.6; }
+        50% { opacity: 1; }
+      }
+      .planet-float {
+        animation: float 4s ease-in-out infinite;
+      }
+      .twinkle {
+        animation: twinkle 2.5s ease-in-out infinite;
+      }
+
+      /* ========== CALENDAR HEAT ========== */
+      .cal-cell {
+        width: 100%;
+        aspect-ratio: 1;
+        border-radius: var(--radius-sm);
+      }
+      .cal-0 { background: var(--background-200); }
+      .cal-1 { background: var(--brand-100); }
+      .cal-2 { background: var(--brand-200); }
+      .cal-3 { background: var(--brand-300); }
+      .cal-4 { background: var(--brand-500); }
+
+      /* ========== STAT PILL ========== */
+      .stat-pill {
+        flex: 1;
+        background: var(--card);
+        border-radius: var(--radius-lg);
+        padding: 14px 12px;
+        text-align: center;
+        box-shadow: var(--shadow-xs);
+      }
+    </style>
+</head>
+<body class="min-h-screen antialiased">
+    <main class="showcase-page">
+      <!-- HEADER -->
+      <header class="showcase-header">
+        <div class="showcase-badge">
+          <i data-lucide="star" style="width:14px;height:14px;"></i>
+          UI Redesign Concept
+        </div>
+        <h1 class="showcase-title">童伴星球</h1>
+        <p class="showcase-subtitle">一款温暖的育儿成长记录应用。以赤陶珊瑚为主色调，融合手账般的纸质感与苹果式精致留白，陪伴父母记录宝宝成长的每一刻。</p>
+        <div class="flex items-center justify-center gap-3 text-sm" style="color: var(--text-400);">
+          <span class="flex items-center gap-1"><span style="width:10px;height:10px;border-radius:50%;background:var(--brand-500);display:inline-block;"></span>赤陶珊瑚</span>
+          <span>·</span>
+          <span class="flex items-center gap-1"><span style="width:10px;height:10px;border-radius:50%;background:var(--sage-500);display:inline-block;"></span>鼠尾草绿</span>
+          <span>·</span>
+          <span class="flex items-center gap-1"><span style="width:10px;height:10px;border-radius:50%;background:var(--honey-500);display:inline-block;"></span>蜂蜜金</span>
+        </div>
+      </header>
+
+      <!-- PHONE GRID -->
+      <div class="showcase-grid">
+
+        <!-- ==================== SCREEN 1: SPLASH ==================== -->
+        <div class="phone-wrapper">
+          <div class="phone-frame">
+            <div class="phone-screen" style="background: linear-gradient(160deg, var(--brand-500) 0%, var(--brand-400) 40%, var(--brand-300) 100%);">
+              <div class="phone-notch"></div>
+              <div class="status-bar dark-statusbar">
+                <span class="status-time">9:41</span>
+                <div class="status-icons">
+                  <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="0.5"/><rect x="5" y="5" width="3" height="7" rx="0.5"/><rect x="10" y="2" width="3" height="10" rx="0.5"/><rect x="15" y="0" width="3" height="12" rx="0.5"/></svg>
+                  <svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><path d="M8 2.5c2 0 3.9.8 5.3 2.1l1.2-1.2C12.8 1.7 10.5.8 8 .8S3.2 1.7 1.5 3.4l1.2 1.2C4.1 3.3 6 2.5 8 2.5zM8 5.8c1.2 0 2.3.4 3.2 1.2l1.2-1.2C11.1 4.6 9.6 4 8 4s-3.1.6-4.4 1.8l1.2 1.2C5.7 6.3 6.8 5.8 8 5.8zM8 9.1c.6 0 1.2.2 1.6.7L8 11.3l-1.6-1.6c.4-.4 1-.6 1.6-.6z"/></svg>
+                  <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="0.5" y="0.5" width="22" height="11" rx="3" stroke="currentColor" opacity="0.5"/><rect x="2" y="2" width="18" height="8" rx="1.5" fill="currentColor"/><rect x="23.5" y="4" width="1.5" height="4" rx="0.5" fill="currentColor" opacity="0.5"/></svg>
+                </div>
+              </div>
+
+              <!-- Blob decorations -->
+              <div class="blob blob-sand" style="width:220px;height:220px;top:-40px;right:-60px;opacity:0.3;"></div>
+              <div class="blob" style="background:var(--brand-200);width:280px;height:280px;bottom:-80px;left:-80px;opacity:0.4;filter:blur(60px);"></div>
+              <div class="blob blob-honey" style="width:120px;height:120px;top:200px;right:40px;opacity:0.25;"></div>
+
+              <!-- Stars -->
+              <svg style="position:absolute;top:120px;left:50px;" width="20" height="20" viewBox="0 0 20 20" class="twinkle">
+                <path d="M10 2l2 6h6l-5 4 2 6-5-4-5 4 2-6-5-4h6z" fill="#fff" opacity="0.7"/>
+              </svg>
+              <svg style="position:absolute;top:180px;right:70px;" width="14" height="14" viewBox="0 0 20 20" class="twinkle" style="animation-delay:0.5s;">
+                <path d="M10 2l2 6h6l-5 4 2 6-5-4-5 4 2-6-5-4h6z" fill="#fff" opacity="0.5"/>
+              </svg>
+              <svg style="position:absolute;bottom:280px;left:80px;" width="12" height="12" viewBox="0 0 20 20" class="twinkle" style="animation-delay:1s;">
+                <path d="M10 2l2 6h6l-5 4 2 6-5-4-5 4 2-6-5-4h6z" fill="#fff" opacity="0.6"/>
+              </svg>
+              <svg style="position:absolute;top:340px;right:50px;" width="16" height="16" viewBox="0 0 20 20" class="twinkle" style="animation-delay:1.5s;">
+                <path d="M10 2l2 6h6l-5 4 2 6-5-4-5 4 2-6-5-4h6z" fill="#fff" opacity="0.5"/>
+              </svg>
+
+              <!-- Content -->
+              <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 40px;">
+                <!-- Planet Logo SVG -->
+                <div class="planet-float" style="margin-bottom:40px;">
+                  <svg width="160" height="160" viewBox="0 0 160 160" fill="none">
+                    <!-- Outer glow ring -->
+                    <circle cx="80" cy="80" r="72" fill="rgba(255,255,255,0.08)"/>
+                    <circle cx="80" cy="80" r="64" fill="rgba(255,255,255,0.1)"/>
+                    <!-- Planet body -->
+                    <circle cx="80" cy="80" r="48" fill="#FDF2EE"/>
+                    <!-- Planet shading -->
+                    <circle cx="68" cy="70" r="40" fill="rgba(255,255,255,0.3)"/>
+                    <!-- Face: eyes -->
+                    <circle cx="68" cy="76" r="3.5" fill="#5C2820"/>
+                    <circle cx="92" cy="76" r="3.5" fill="#5C2820"/>
+                    <!-- Eye highlights -->
+                    <circle cx="69" cy="75" r="1" fill="#fff"/>
+                    <circle cx="93" cy="75" r="1" fill="#fff"/>
+                    <!-- Face: smile -->
+                    <path d="M68 88 Q80 98 92 88" stroke="#5C2820" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                    <!-- Cheeks -->
+                    <circle cx="60" cy="86" r="4" fill="#F4C3B2" opacity="0.8"/>
+                    <circle cx="100" cy="86" r="4" fill="#F4C3B2" opacity="0.8"/>
+                    <!-- Ring around planet -->
+                    <ellipse cx="80" cy="80" rx="70" ry="16" stroke="#F4C3B2" stroke-width="2.5" fill="none" opacity="0.6" transform="rotate(-20 80 80)"/>
+                    <!-- Small orbiting star -->
+                    <circle cx="140" cy="50" r="4" fill="#E8B84B"/>
+                    <circle cx="140" cy="50" r="7" fill="#E8B84B" opacity="0.3"/>
+                  </svg>
+                </div>
+
+                <h1 style="font-size:36px;font-weight:700;color:#fff;letter-spacing:-0.02em;margin-bottom:10px;font-family:var(--font-display);">童伴星球</h1>
+                <p style="font-size:16px;color:rgba(255,255,255,0.85);letter-spacing:0.05em;font-weight:400;">记录成长每一刻</p>
+              </div>
+
+              <div class="home-indicator light-indicator"></div>
+            </div>
+          </div>
+          <div class="phone-label">
+            <div class="phone-label-title">启动页</div>
+            <div class="phone-label-desc">Splash Screen</div>
+          </div>
+        </div>
+
+        <!-- ==================== SCREEN 2: LOGIN ==================== -->
+        <div class="phone-wrapper">
+          <div class="phone-frame">
+            <div class="phone-screen" style="background: var(--background-50);">
+              <div class="phone-notch"></div>
+              <div class="status-bar">
+                <span class="status-time">9:41</span>
+                <div class="status-icons">
+                  <svg width="18" height="12" viewBox="0 0 18 12" fill="var(--text-700)"><rect x="0" y="8" width="3" height="4" rx="0.5"/><rect x="5" y="5" width="3" height="7" rx="0.5"/><rect x="10" y="2" width="3" height="10" rx="0.5"/><rect x="15" y="0" width="3" height="12" rx="0.5"/></svg>
+                  <svg width="16" height="12" viewBox="0 0 16 12" fill="var(--text-700)"><path d="M8 2.5c2 0 3.9.8 5.3 2.1l1.2-1.2C12.8 1.7 10.5.8 8 .8S3.2 1.7 1.5 3.4l1.2 1.2C4.1 3.3 6 2.5 8 2.5zM8 5.8c1.2 0 2.3.4 3.2 1.2l1.2-1.2C11.1 4.6 9.6 4 8 4s-3.1.6-4.4 1.8l1.2 1.2C5.7 6.3 6.8 5.8 8 5.8zM8 9.1c.6 0 1.2.2 1.6.7L8 11.3l-1.6-1.6c.4-.4 1-.6 1.6-.6z"/></svg>
+                  <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="0.5" y="0.5" width="22" height="11" rx="3" stroke="var(--text-700)" opacity="0.5"/><rect x="2" y="2" width="18" height="8" rx="1.5" fill="var(--text-700)"/><rect x="23.5" y="4" width="1.5" height="4" rx="0.5" fill="var(--text-700)" opacity="0.5"/></svg>
+                </div>
+              </div>
+
+              <!-- Decorative blobs -->
+              <div class="blob blob-terracotta" style="width:200px;height:200px;top:-60px;right:-60px;opacity:0.2;"></div>
+              <div class="blob blob-sage" style="width:180px;height:180px;top:100px;left:-50px;opacity:0.2;"></div>
+
+              <div style="padding:80px 32px 40px;position:relative;z-index:1;">
+                <!-- Illustration -->
+                <div style="text-align:center;margin-bottom:40px;">
+                  <svg width="180" height="180" viewBox="0 0 180 180" fill="none" style="margin:0 auto;">
+                    <!-- Warm circle background -->
+                    <circle cx="90" cy="90" r="70" fill="var(--brand-50)"/>
+                    <circle cx="90" cy="90" r="55" fill="var(--brand-100)" opacity="0.5"/>
+                    <!-- Parent silhouette (abstract) -->
+                    <path d="M60 130 Q60 90 75 80 Q80 72 78 62 Q77 50 86 46 Q96 43 100 52 Q103 60 100 70 Q98 78 103 85 Q118 95 118 130 Z" fill="var(--brand-300)" opacity="0.7"/>
+                    <!-- Baby silhouette -->
+                    <ellipse cx="115" cy="115" rx="22" ry="26" fill="var(--brand-500)" opacity="0.8"/>
+                    <!-- Baby face dot -->
+                    <circle cx="110" cy="108" r="2.5" fill="#fff" opacity="0.8"/>
+                    <circle cx="120" cy="108" r="2.5" fill="#fff" opacity="0.8"/>
+                    <path d="M110 118 Q115 122 120 118" stroke="#fff" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.8"/>
+                    <!-- Heart -->
+                    <path d="M55 70 C55 64, 62 60, 66 66 C70 60, 77 64, 77 70 C77 78, 66 84, 66 84 C66 84, 55 78, 55 70Z" fill="var(--brand-500)" opacity="0.6"/>
+                    <!-- Floating dots -->
+                    <circle cx="40" cy="80" r="4" fill="var(--honey-400)" opacity="0.5"/>
+                    <circle cx="145" cy="70" r="3" fill="var(--sage-300)" opacity="0.5"/>
+                    <circle cx="150" cy="110" r="5" fill="var(--brand-200)" opacity="0.5"/>
+                  </svg>
+                </div>
+
+                <div style="text-align:center;margin-bottom:36px;">
+                  <h2 style="font-size:26px;font-weight:700;color:var(--text-800);margin-bottom:8px;letter-spacing:-0.02em;">欢迎回来</h2>
+                  <p style="font-size:14px;color:var(--text-400);">登录以继续记录宝宝的成长旅程</p>
+                </div>
+
+                <!-- Phone input -->
+                <div class="input-field" style="margin-bottom:14px;">
+                  <span style="font-size:15px;color:var(--text-600);font-weight:500;">+86</span>
+                  <div style="width:1px;height:20px;background:var(--border);"></div>
+                  <input type="tel" placeholder="请输入手机号" />
+                </div>
+
+                <!-- Verification code button -->
+                <button class="btn-primary" style="margin-bottom:14px;">
+                  获取验证码
+                </button>
+
+                <!-- WeChat login -->
+                <button class="btn-secondary btn-wechat">
+                  <i data-lucide="message-circle" style="width:20px;height:20px;"></i>
+                  微信一键登录
+                </button>
+
+                <!-- Terms -->
+                <p style="text-align:center;margin-top:28px;font-size:12px;color:var(--text-400);line-height:1.6;">
+                  登录即表示同意
+                  <span style="color:var(--brand-600);">《用户协议》</span>
+                  和
+                  <span style="color:var(--brand-600);">《隐私政策》</span>
+                </p>
+              </div>
+
+              <div class="home-indicator"></div>
+            </div>
+          </div>
+          <div class="phone-label">
+            <div class="phone-label-title">登录页</div>
+            <div class="phone-label-desc">Login Screen</div>
+          </div>
+        </div>
+
+        <!-- ==================== SCREEN 3: ONBOARDING ==================== -->
+        <div class="phone-wrapper">
+          <div class="phone-frame">
+            <div class="phone-screen" style="background: var(--background-50);">
+              <div class="phone-notch"></div>
+              <div class="status-bar">
+                <span class="status-time">9:41</span>
+                <div class="status-icons">
+                  <svg width="18" height="12" viewBox="0 0 18 12" fill="var(--text-700)"><rect x="0" y="8" width="3" height="4" rx="0.5"/><rect x="5" y="5" width="3" height="7" rx="0.5"/><rect x="10" y="2" width="3" height="10" rx="0.5"/><rect x="15" y="0" width="3" height="12" rx="0.5"/></svg>
+                  <svg width="16" height="12" viewBox="0 0 16 12" fill="var(--text-700)"><path d="M8 2.5c2 0 3.9.8 5.3 2.1l1.2-1.2C12.8 1.7 10.5.8 8 .8S3.2 1.7 1.5 3.4l1.2 1.2C4.1 3.3 6 2.5 8 2.5zM8 5.8c1.2 0 2.3.4 3.2 1.2l1.2-1.2C11.1 4.6 9.6 4 8 4s-3.1.6-4.4 1.8l1.2 1.2C5.7 6.3 6.8 5.8 8 5.8zM8 9.1c.6 0 1.2.2 1.6.7L8 11.3l-1.6-1.6c.4-.4 1-.6 1.6-.6z"/></svg>
+                  <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="0.5" y="0.5" width="22" height="11" rx="3" stroke="var(--text-700)" opacity="0.5"/><rect x="2" y="2" width="18" height="8" rx="1.5" fill="var(--text-700)"/><rect x="23.5" y="4" width="1.5" height="4" rx="0.5" fill="var(--text-700)" opacity="0.5"/></svg>
+                </div>
+              </div>
+
+              <!-- Skip button -->
+              <div style="position:absolute;top:60px;right:24px;z-index:10;">
+                <button class="btn-ghost">跳过</button>
+              </div>
+
+              <!-- Blobs -->
+              <div class="blob blob-sand" style="width:250px;height:250px;top:-80px;left:-80px;opacity:0.4;"></div>
+              <div class="blob blob-terracotta" style="width:200px;height:200px;bottom:200px;right:-70px;opacity:0.15;"></div>
+
+              <div style="padding:120px 36px 40px;display:flex;flex-direction:column;align-items:center;min-height:100%;position:relative;z-index:1;">
+                <!-- Illustration: growth milestones -->
+                <div style="margin-bottom:48px;">
+                  <svg width="260" height="260" viewBox="0 0 260 260" fill="none">
+                    <!-- Ground -->
+                    <ellipse cx="130" cy="220" rx="100" ry="15" fill="var(--sage-100)" opacity="0.5"/>
+                    <!-- Plant stem -->
+                    <path d="M130 210 Q130 170 125 140 Q120 110 130 80" stroke="var(--sage-400)" stroke-width="3" stroke-linecap="round" fill="none"/>
+                    <!-- Leaves -->
+                    <path d="M128 160 Q100 150 90 125 Q115 125 128 145" fill="var(--sage-300)"/>
+                    <path d="M128 120 Q160 110 165 85 Q145 90 130 110" fill="var(--sage-400)"/>
+                    <!-- Flower (top milestone) -->
+                    <circle cx="130" cy="70" r="18" fill="var(--brand-300)"/>
+                    <circle cx="130" cy="70" r="10" fill="var(--honey-400)"/>
+                    <!-- Milestone markers along the plant -->
+                    <circle cx="125" cy="140" r="10" fill="var(--card)" stroke="var(--brand-300)" stroke-width="2"/>
+                    <text x="125" y="144" text-anchor="middle" font-size="10" fill="var(--brand-500)" font-weight="600">6m</text>
+                    <circle cx="128" cy="180" r="10" fill="var(--card)" stroke="var(--sage-300)" stroke-width="2"/>
+                    <text x="128" y="184" text-anchor="middle" font-size="10" fill="var(--sage-500)" font-weight="600">3m</text>
+                    <circle cx="130" cy="205" r="10" fill="var(--primary)" stroke="var(--primary)" stroke-width="2"/>
+                    <text x="130" y="209" text-anchor="middle" font-size="9" fill="#fff" font-weight="600">出生</text>
+                    <!-- Floating icons -->
+                    <!-- Star -->
+                    <g transform="translate(60,60)">
+                      <circle cx="15" cy="15" r="15" fill="var(--honey-400)" opacity="0.15"/>
+                      <path d="M15 6l2.5 6.5H24l-5.5 4 2 6.5L15 19l-5.5 4 2-6.5-5.5-4h6.5z" fill="var(--honey-500)"/>
+                    </g>
+                    <!-- Heart -->
+                    <g transform="translate(195,90)">
+                      <circle cx="15" cy="15" r="15" fill="var(--brand-200)" opacity="0.2"/>
+                      <path d="M15 22C15 22 6 16 6 11C6 7 9 5 11.5 5C13.5 5 15 7 15 7C15 7 16.5 5 18.5 5C21 5 24 7 24 11C24 16 15 22 15 22Z" fill="var(--brand-500)"/>
+                    </g>
+                    <!-- Camera -->
+                    <g transform="translate(50,150)">
+                      <circle cx="15" cy="15" r="15" fill="var(--sage-100)" opacity="0.5"/>
+                      <rect x="7" y="11" width="16" height="11" rx="2" fill="var(--sage-500)"/>
+                      <circle cx="15" cy="16.5" r="3.5" fill="#fff"/>
+                      <rect x="11" y="9" width="4" height="2" rx="0.5" fill="var(--sage-500)"/>
+                    </g>
+                    <!-- Small sparkles -->
+                    <circle cx="200" cy="180" r="3" fill="var(--honey-400)" opacity="0.6"/>
+                    <circle cx="40" cy="100" r="2.5" fill="var(--brand-300)" opacity="0.5"/>
+                    <circle cx="220" cy="50" r="2" fill="var(--sage-300)" opacity="0.6"/>
+                  </svg>
+                </div>
+
+                <h2 style="font-size:24px;font-weight:700;color:var(--text-800);margin-bottom:12px;text-align:center;letter-spacing:-0.02em;">记录成长点滴</h2>
+                <p style="font-size:14px;color:var(--text-400);text-align:center;line-height:1.7;padding:0 20px;margin-bottom:40px;">
+                  第一次微笑、第一颗牙齿、第一步走路<br/>每一个珍贵瞬间都值得被温柔记录
+                </p>
+
+                <!-- Page dots -->
+                <div class="page-dots" style="margin-bottom:32px;">
+                  <div class="page-dot active"></div>
+                  <div class="page-dot"></div>
+                  <div class="page-dot"></div>
+                </div>
+
+                <button class="btn-primary" style="margin-bottom:10px;">
+                  下一步
+                  <i data-lucide="arrow-right" style="width:18px;height:18px;"></i>
+                </button>
+              </div>
+
+              <div class="home-indicator"></div>
+            </div>
+          </div>
+          <div class="phone-label">
+            <div class="phone-label-title">引导页</div>
+            <div class="phone-label-desc">Onboarding</div>
+          </div>
+        </div>
+
+        <!-- ==================== SCREEN 4: GROWTH ARCHIVE ==================== -->
+        <div class="phone-wrapper">
+          <div class="phone-frame">
+            <div class="phone-screen" style="background: var(--background-50);">
+              <div class="phone-notch"></div>
+              <div class="status-bar">
+                <span class="status-time">9:41</span>
+                <div class="status-icons">
+                  <svg width="18" height="12" viewBox="0 0 18 12" fill="var(--text-700)"><rect x="0" y="8" width="3" height="4" rx="0.5"/><rect x="5" y="5" width="3" height="7" rx="0.5"/><rect x="10" y="2" width="3" height="10" rx="0.5"/><rect x="15" y="0" width="3" height="12" rx="0.5"/></svg>
+                  <svg width="16" height="12" viewBox="0 0 16 12" fill="var(--text-700)"><path d="M8 2.5c2 0 3.9.8 5.3 2.1l1.2-1.2C12.8 1.7 10.5.8 8 .8S3.2 1.7 1.5 3.4l1.2 1.2C4.1 3.3 6 2.5 8 2.5zM8 5.8c1.2 0 2.3.4 3.2 1.2l1.2-1.2C11.1 4.6 9.6 4 8 4s-3.1.6-4.4 1.8l1.2 1.2C5.7 6.3 6.8 5.8 8 5.8zM8 9.1c.6 0 1.2.2 1.6.7L8 11.3l-1.6-1.6c.4-.4 1-.6 1.6-.6z"/></svg>
+                  <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="0.5" y="0.5" width="22" height="11" rx="3" stroke="var(--text-700)" opacity="0.5"/><rect x="2" y="2" width="18" height="8" rx="1.5" fill="var(--text-700)"/><rect x="23.5" y="4" width="1.5" height="4" rx="0.5" fill="var(--text-700)" opacity="0.5"/></svg>
+                </div>
+              </div>
+
+              <div class="screen-scroll">
+                <div style="padding:20px 20px 20px;">
+                  <!-- Greeting -->
+                  <div style="margin-bottom:20px;">
+                    <p style="font-size:13px;color:var(--text-400);margin-bottom:4px;">7月18日 星期六</p>
+                    <h2 style="font-size:24px;font-weight:700;color:var(--text-800);letter-spacing:-0.02em;">早安，小雅妈妈 <span style="font-size:20px;">☀️</span></h2>
+                  </div>
+
+                  <!-- Baby info card -->
+                  <div class="card" style="padding:18px;margin-bottom:16px;display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,var(--card) 0%,var(--brand-50) 100%);">
+                    <!-- Avatar -->
+                    <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--brand-200),var(--brand-400));display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:var(--shadow-sm);">
+                      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <circle cx="16" cy="13" r="8" fill="#FDF2EE"/>
+                        <circle cx="13" cy="12" r="1.5" fill="#5C2820"/>
+                        <circle cx="19" cy="12" r="1.5" fill="#5C2820"/>
+                        <path d="M13 16 Q16 18.5 19 16" stroke="#5C2820" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+                        <path d="M8 26 Q8 20 16 19 Q24 20 24 26Z" fill="#FDF2EE"/>
+                      </svg>
+                    </div>
+                    <div style="flex:1;">
+                      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                        <h3 style="font-size:17px;font-weight:600;color:var(--text-800);">小豆芽</h3>
+                        <span style="font-size:11px;padding:2px 8px;background:var(--brand-100);color:var(--brand-700);border-radius:var(--radius-full);font-weight:500;">女宝</span>
+                      </div>
+                      <p style="font-size:13px;color:var(--text-400);">1岁2个月 · 第426天</p>
+                    </div>
+                    <i data-lucide="chevron-right" style="width:20px;height:20px;color:var(--text-400);"></i>
+                  </div>
+
+                  <!-- Quick stats -->
+                  <div style="display:flex;gap:10px;margin-bottom:24px;">
+                    <div class="stat-pill">
+                      <div style="display:flex;align-items:center;justify-content:center;gap:4px;margin-bottom:6px;">
+                        <i data-lucide="ruler" style="width:14px;height:14px;color:var(--brand-500);"></i>
+                        <span style="font-size:11px;color:var(--text-400);">身高</span>
+                      </div>
+                      <div style="font-size:18px;font-weight:700;color:var(--text-700);">78.5<span style="font-size:12px;font-weight:400;color:var(--text-400);">cm</span></div>
+                    </div>
+                    <div class="stat-pill">
+                      <div style="display:flex;align-items:center;justify-content:center;gap:4px;margin-bottom:6px;">
+                        <i data-lucide="scale" style="width:14px;height:14px;color:var(--sage-500);"></i>
+                        <span style="font-size:11px;color:var(--text-400);">体重</span>
+                      </div>
+                      <div style="font-size:18px;font-weight:700;color:var(--text-700);">10.2<span style="font-size:12px;font-weight:400;color:var(--text-400);">kg</span></div>
+                    </div>
+                    <div class="stat-pill">
+                      <div style="display:flex;align-items:center;justify-content:center;gap:4px;margin-bottom:6px;">
+                        <i data-lucide="smile" style="width:14px;height:14px;color:var(--honey-500);"></i>
+                        <span style="font-size:11px;color:var(--text-400);">牙齿</span>
+                      </div>
+                      <div style="font-size:18px;font-weight:700;color:var(--text-700);">8<span style="font-size:12px;font-weight:400;color:var(--text-400);">颗</span></div>
+                    </div>
+                  </div>
+
+                  <!-- Section header -->
+                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+                    <h3 style="font-size:17px;font-weight:600;color:var(--text-700);">今日里程碑</h3>
+                    <span style="font-size:13px;color:var(--primary);font-weight:500;">查看全部</span>
+                  </div>
+
+                  <!-- Milestone cards -->
+                  <div style="display:flex;flex-direction:column;gap:12px;">
+                    <!-- Milestone 1 -->
+                    <div class="card" style="padding:14px;display:flex;gap:14px;">
+                      <div class="milestone-photo" style="width:80px;height:80px;background:linear-gradient(135deg,var(--brand-100),var(--brand-200));flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+                        <i data-lucide="camera" style="width:28px;height:28px;color:var(--brand-500);opacity:0.6;"></i>
+                      </div>
+                      <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+                        <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+                          <span style="width:22px;height:22px;border-radius:50%;background:var(--state-success-surface);display:flex;align-items:center;justify-content:center;">
+                            <i data-lucide="star" style="width:12px;height:12px;color:var(--state-success);"></i>
+                          </span>
+                          <span style="font-size:15px;font-weight:600;color:var(--text-700);">第一次叫妈妈</span>
+                        </div>
+                        <p style="font-size:13px;color:var(--text-400);line-height:1.5;margin-bottom:8px;">今天早上小豆芽清晰地叫了一声"妈妈"，好感动！</p>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                          <span style="font-size:11px;color:var(--text-400);display:flex;align-items:center;gap:3px;">
+                            <i data-lucide="clock" style="width:11px;height:11px;"></i>
+                            08:32
+                          </span>
+                          <span style="font-size:11px;color:var(--text-400);display:flex;align-items:center;gap:3px;">
+                            <i data-lucide="heart" style="width:11px;height:11px;color:var(--brand-400);"></i>
+                            12
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Milestone 2 -->
+                    <div class="card" style="padding:14px;display:flex;gap:14px;">
+                      <div class="milestone-photo" style="width:80px;height:80px;background:linear-gradient(135deg,var(--sage-100),var(--sage-200));flex-shrink:0;display:flex;align-items:center;justify-content:center;">
+                        <i data-lucide="baby" style="width:28px;height:28px;color:var(--sage-500);opacity:0.6;"></i>
+                      </div>
+                      <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+                        <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+                          <span style="width:22px;height:22px;border-radius:50%;background:var(--state-warning-surface);display:flex;align-items:center;justify-content:center;">
+                            <i data-lucide="ruler" style="width:12px;height:12px;color:var(--state-warning);"></i>
+                          </span>
+                          <span style="font-size:15px;font-weight:600;color:var(--text-700);">独立走了3步</span>
+                        </div>
+                        <p style="font-size:13px;color:var(--text-400);line-height:1.5;margin-bottom:8px;">扶着沙发走了过来，松开手后自己走了三步！</p>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                          <span style="font-size:11px;color:var(--text-400);display:flex;align-items:center;gap:3px;">
+                            <i data-lucide="clock" style="width:11px;height:11px;"></i>
+                            15:20
+                          </span>
+                          <span style="font-size:11px;color:var(--text-400);display:flex;align-items:center;gap:3px;">
+                            <i data-lucide="heart" style="width:11px;height:11px;color:var(--brand-400);"></i>
+                            8
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- FAB -->
+              <button class="fab-btn">
+                <i data-lucide="plus" style="width:26px;height:26px;"></i>
+              </button>
+
+              <!-- Tab bar -->
+              <div class="tab-bar">
+                <div class="tab-item active">
+                  <i data-lucide="baby"></i>
+                  <span>档案</span>
+                </div>
+                <div class="tab-item">
+                  <i data-lucide="star"></i>
+                  <span>星球</span>
+                </div>
+                <div class="tab-item">
+                  <i data-lucide="sun"></i>
+                  <span>天气</span>
+                </div>
+                <div class="tab-item">
+                  <i data-lucide="user"></i>
+                  <span>我的</span>
+                </div>
+              </div>
+
+              <div class="home-indicator"></div>
+            </div>
+          </div>
+          <div class="phone-label">
+            <div class="phone-label-title">成长档案</div>
+            <div class="phone-label-desc">Growth Archive</div>
+          </div>
+        </div>
+
+        <!-- ==================== SCREEN 5: GROWTH PLANET ==================== -->
+        <div class="phone-wrapper">
+          <div class="phone-frame">
+            <div class="phone-screen star-map-bg">
+              <div class="phone-notch"></div>
+              <div class="status-bar">
+                <span class="status-time">9:41</span>
+                <div class="status-icons">
+                  <svg width="18" height="12" viewBox="0 0 18 12" fill="var(--text-700)"><rect x="0" y="8" width="3" height="4" rx="0.5"/><rect x="5" y="5" width="3" height="7" rx="0.5"/><rect x="10" y="2" width="3" height="10" rx="0.5"/><rect x="15" y="0" width="3" height="12" rx="0.5"/></svg>
+                  <svg width="16" height="12" viewBox="0 0 16 12" fill="var(--text-700)"><path d="M8 2.5c2 0 3.9.8 5.3 2.1l1.2-1.2C12.8 1.7 10.5.8 8 .8S3.2 1.7 1.5 3.4l1.2 1.2C4.1 3.3 6 2.5 8 2.5zM8 5.8c1.2 0 2.3.4 3.2 1.2l1.2-1.2C11.1 4.6 9.6 4 8 4s-3.1.6-4.4 1.8l1.2 1.2C5.7 6.3 6.8 5.8 8 5.8zM8 9.1c.6 0 1.2.2 1.6.7L8 11.3l-1.6-1.6c.4-.4 1-.6 1.6-.6z"/></svg>
+                  <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="0.5" y="0.5" width="22" height="11" rx="3" stroke="var(--text-700)" opacity="0.5"/><rect x="2" y="2" width="18" height="8" rx="1.5" fill="var(--text-700)"/><rect x="23.5" y="4" width="1.5" height="4" rx="0.5" fill="var(--text-700)" opacity="0.5"/></svg>
+                </div>
+              </div>
+
+              <div class="screen-scroll">
+                <div style="padding:20px 20px 20px;">
+                  <!-- Header -->
+                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                    <div>
+                      <h2 style="font-size:22px;font-weight:700;color:var(--text-800);letter-spacing:-0.02em;margin-bottom:4px;">成长星球</h2>
+                      <p style="font-size:13px;color:var(--text-400);">探索宝宝的成长宇宙</p>
+                    </div>
+                    <button style="width:40px;height:40px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-sm);border:none;cursor:pointer;">
+                      <i data-lucide="filter" style="width:18px;height:18px;color:var(--text-600);"></i>
+                    </button>
+                  </div>
+
+                  <!-- Age filter tabs -->
+                  <div class="age-tabs" style="margin-bottom:20px;overflow-x:auto;">
+                    <div class="age-tab">0-3月</div>
+                    <div class="age-tab">4-6月</div>
+                    <div class="age-tab">7-12月</div>
+                    <div class="age-tab active">1岁+</div>
+                    <div class="age-tab">全部</div>
+                  </div>
+
+                  <!-- Constellation Map -->
+                  <div class="card" style="padding:20px;position:relative;overflow:hidden;background:linear-gradient(180deg,#fff 0%,var(--sand-50) 100%);">
+                    <svg width="100%" height="380" viewBox="0 0 330 380" fill="none" style="display:block;">
+                      <!-- Constellation lines -->
+                      <path class="constellation-line" d="M60 320 Q100 280 120 240"/>
+                      <path class="constellation-line" d="M120 240 Q170 200 200 180"/>
+                      <path class="constellation-line" d="M200 180 Q240 150 270 100"/>
+                      <path class="constellation-line" d="M120 240 Q80 200 60 160"/>
+                      <path class="constellation-line" d="M200 180 Q180 120 140 80"/>
+                      <path class="constellation-line" d="M60 160 Q100 130 140 80"/>
+                      <path class="constellation-line" d="M270 100 Q290 160 260 220"/>
+                      <path class="constellation-line" d="M200 180 Q250 200 260 220"/>
+
+                      <!-- Background stars -->
+                      <circle cx="40" cy="60" r="1.5" fill="var(--sand-400)" opacity="0.5"/>
+                      <circle cx="300" cy="50" r="1" fill="var(--sand-400)" opacity="0.4"/>
+                      <circle cx="20" cy="200" r="1.2" fill="var(--sand-400)" opacity="0.5"/>
+                      <circle cx="310" cy="280" r="1.5" fill="var(--sand-400)" opacity="0.4"/>
+                      <circle cx="80" cy="40" r="1" fill="var(--sand-400)" opacity="0.3"/>
+                      <circle cx="280" cy="330" r="1.2" fill="var(--sand-400)" opacity="0.5"/>
+
+                      <!-- Star nodes (milestones) -->
+                      <!-- Node: birth (large, reached) -->
+                      <g class="star-node" transform="translate(60,320)">
+                        <circle class="star-glow" r="20"/>
+                        <circle class="star-core" r="10"/>
+                        <text y="28" text-anchor="middle" font-size="10" fill="var(--text-500)" font-weight="500">出生</text>
+                        <text y="40" text-anchor="middle" font-size="9" fill="var(--text-400)">2025.05</text>
+                      </g>
+
+                      <!-- Node: first smile -->
+                      <g class="star-node" transform="translate(120,240)">
+                        <circle class="star-glow" r="16"/>
+                        <circle class="star-core" r="8"/>
+                        <text y="24" text-anchor="middle" font-size="10" fill="var(--text-500)" font-weight="500">第一次笑</text>
+                        <text y="36" text-anchor="middle" font-size="9" fill="var(--text-400)">2025.06</text>
+                      </g>
+
+                      <!-- Node: first tooth -->
+                      <g class="star-node" transform="translate(60,160)">
+                        <circle class="star-glow" r="16"/>
+                        <circle class="star-core" r="8"/>
+                        <text x="-15" y="-12" text-anchor="end" font-size="10" fill="var(--text-500)" font-weight="500">第一颗牙</text>
+                        <text x="-15" y="0" text-anchor="end" font-size="9" fill="var(--text-400)">2025.11</text>
+                      </g>
+
+                      <!-- Node: crawling -->
+                      <g class="star-node" transform="translate(200,180)">
+                        <circle class="star-glow" r="18"/>
+                        <circle class="star-core" r="9"/>
+                        <text y="-14" text-anchor="middle" font-size="10" fill="var(--text-500)" font-weight="500">学会爬行</text>
+                        <text y="-2" text-anchor="middle" font-size="9" fill="var(--text-400)">2026.01</text>
+                      </g>
+
+                      <!-- Node: first words -->
+                      <g class="star-node" transform="translate(140,80)">
+                        <circle class="star-glow" r="18"/>
+                        <circle class="star-core" r="9" style="fill:var(--honey-500);"/>
+                        <text y="-14" text-anchor="middle" font-size="10" fill="var(--text-500)" font-weight="600">叫妈妈</text>
+                        <text y="-2" text-anchor="middle" font-size="9" fill="var(--primary)">今天!</text>
+                      </g>
+
+                      <!-- Node: walking -->
+                      <g class="star-node" transform="translate(270,100)">
+                        <circle class="star-glow" r="14"/>
+                        <circle class="star-core" r="7" style="fill:var(--sage-500);"/>
+                        <text x="15" y="-4" text-anchor="start" font-size="10" fill="var(--text-500)" font-weight="500">走路</text>
+                        <text x="15" y="8" text-anchor="start" font-size="9" fill="var(--sage-500)">进行中</text>
+                      </g>
+
+                      <!-- Future dimmed nodes -->
+                      <g class="star-node dim" transform="translate(260,220)">
+                        <circle class="star-glow" r="12"/>
+                        <circle class="star-core" r="6"/>
+                        <text y="22" text-anchor="middle" font-size="9" fill="var(--text-400)">跑步</text>
+                      </g>
+                    </svg>
+                  </div>
+
+                  <!-- Milestone count card -->
+                  <div style="display:flex;gap:10px;margin-top:16px;">
+                    <div class="stat-pill" style="background:var(--brand-50);">
+                      <div style="font-size:22px;font-weight:700;color:var(--brand-600);">24</div>
+                      <div style="font-size:11px;color:var(--text-400);margin-top:2px;">已达成</div>
+                    </div>
+                    <div class="stat-pill" style="background:var(--state-warning-surface);">
+                      <div style="font-size:22px;font-weight:700;color:var(--honey-500);">3</div>
+                      <div style="font-size:11px;color:var(--text-400);margin-top:2px;">进行中</div>
+                    </div>
+                    <div class="stat-pill" style="background:var(--background-100);">
+                      <div style="font-size:22px;font-weight:700;color:var(--text-500);">∞</div>
+                      <div style="font-size:11px;color:var(--text-400);margin-top:2px;">待解锁</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tab bar -->
+              <div class="tab-bar">
+                <div class="tab-item">
+                  <i data-lucide="baby"></i>
+                  <span>档案</span>
+                </div>
+                <div class="tab-item active">
+                  <i data-lucide="star"></i>
+                  <span>星球</span>
+                </div>
+                <div class="tab-item">
+                  <i data-lucide="sun"></i>
+                  <span>天气</span>
+                </div>
+                <div class="tab-item">
+                  <i data-lucide="user"></i>
+                  <span>我的</span>
+                </div>
+              </div>
+
+              <div class="home-indicator"></div>
+            </div>
+          </div>
+          <div class="phone-label">
+            <div class="phone-label-title">成长星球</div>
+            <div class="phone-label-desc">Growth Planet</div>
+          </div>
+        </div>
+
+        <!-- ==================== SCREEN 6: MOOD WEATHER ==================== -->
+        <div class="phone-wrapper">
+          <div class="phone-frame">
+            <div class="phone-screen" style="background: linear-gradient(180deg, var(--background-50) 0%, var(--sand-50) 100%);">
+              <div class="phone-notch"></div>
+              <div class="status-bar">
+                <span class="status-time">9:41</span>
+                <div class="status-icons">
+                  <svg width="18" height="12" viewBox="0 0 18 12" fill="var(--text-700)"><rect x="0" y="8" width="3" height="4" rx="0.5"/><rect x="5" y="5" width="3" height="7" rx="0.5"/><rect x="10" y="2" width="3" height="10" rx="0.5"/><rect x="15" y="0" width="3" height="12" rx="0.5"/></svg>
+                  <svg width="16" height="12" viewBox="0 0 16 12" fill="var(--text-700)"><path d="M8 2.5c2 0 3.9.8 5.3 2.1l1.2-1.2C12.8 1.7 10.5.8 8 .8S3.2 1.7 1.5 3.4l1.2 1.2C4.1 3.3 6 2.5 8 2.5zM8 5.8c1.2 0 2.3.4 3.2 1.2l1.2-1.2C11.1 4.6 9.6 4 8 4s-3.1.6-4.4 1.8l1.2 1.2C5.7 6.3 6.8 5.8 8 5.8zM8 9.1c.6 0 1.2.2 1.6.7L8 11.3l-1.6-1.6c.4-.4 1-.6 1.6-.6z"/></svg>
+                  <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="0.5" y="0.5" width="22" height="11" rx="3" stroke="var(--text-700)" opacity="0.5"/><rect x="2" y="2" width="18" height="8" rx="1.5" fill="var(--text-700)"/><rect x="23.5" y="4" width="1.5" height="4" rx="0.5" fill="var(--text-700)" opacity="0.5"/></svg>
+                </div>
+              </div>
+
+              <div class="screen-scroll">
+                <div style="padding:20px 20px 20px;">
+                  <!-- Header -->
+                  <div style="margin-bottom:20px;">
+                    <p style="font-size:13px;color:var(--text-400);margin-bottom:4px;">今日心情</p>
+                    <h2 style="font-size:22px;font-weight:700;color:var(--text-800);letter-spacing:-0.02em;">心情天气</h2>
+                  </div>
+
+                  <!-- Today's weather card -->
+                  <div class="card" style="padding:24px;margin-bottom:20px;background:linear-gradient(135deg,var(--honey-400) 0%,var(--brand-300) 100%);position:relative;overflow:hidden;border:none;">
+                    <div class="blob" style="background:#fff;width:150px;height:150px;top:-40px;right:-40px;opacity:0.15;filter:blur(30px);"></div>
+                    <div style="display:flex;align-items:center;gap:20px;position:relative;z-index:1;">
+                      <!-- Sun/cloud SVG -->
+                      <svg width="90" height="90" viewBox="0 0 90 90" fill="none">
+                        <circle cx="40" cy="45" r="22" fill="#FDF2EE"/>
+                        <!-- Sun rays -->
+                        <g stroke="#FDF2EE" stroke-width="3" stroke-linecap="round" opacity="0.7">
+                          <line x1="40" y1="10" x2="40" y2="18"/>
+                          <line x1="40" y1="72" x2="40" y2="80"/>
+                          <line x1="10" y1="45" x2="18" y2="45"/>
+                          <line x1="62" y1="45" x2="70" y2="45"/>
+                          <line x1="18" y1="23" x2="24" y2="29"/>
+                          <line x1="56" y1="61" x2="62" y2="67"/>
+                          <line x1="18" y1="67" x2="24" y2="61"/>
+                          <line x1="56" y1="29" x2="62" y2="23"/>
+                        </g>
+                        <!-- Cloud -->
+                        <ellipse cx="55" cy="55" rx="22" ry="14" fill="#fff" opacity="0.9"/>
+                        <ellipse cx="45" cy="52" rx="14" ry="11" fill="#fff" opacity="0.9"/>
+                        <ellipse cx="65" cy="52" rx="12" ry="10" fill="#fff" opacity="0.9"/>
+                      </svg>
+                      <div style="flex:1;">
+                        <div style="font-size:30px;font-weight:700;color:#fff;margin-bottom:4px;">晴朗</div>
+                        <p style="font-size:13px;color:rgba(255,255,255,0.85);line-height:1.5;">今天是个好日子<br/>宝宝和妈妈都很开心</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Mood selector -->
+                  <div style="margin-bottom:24px;">
+                    <p style="font-size:14px;font-weight:600;color:var(--text-700);margin-bottom:14px;">现在的心情是？</p>
+                    <div style="display:flex;justify-content:space-between;gap:6px;">
+                      <button class="mood-btn">😢</button>
+                      <button class="mood-btn">😐</button>
+                      <button class="mood-btn">🙂</button>
+                      <button class="mood-btn active">😄</button>
+                      <button class="mood-btn">🤩</button>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;margin-top:6px;padding:0 4px;">
+                      <span style="font-size:10px;color:var(--text-400);">难过</span>
+                      <span style="font-size:10px;color:var(--text-400);">平静</span>
+                      <span style="font-size:10px;color:var(--text-400);">不错</span>
+                      <span style="font-size:10px;color:var(--primary);font-weight:500;">开心</span>
+                      <span style="font-size:10px;color:var(--text-400);">超棒</span>
+                    </div>
+                  </div>
+
+                  <!-- Mood insight card -->
+                  <div class="card" style="padding:16px;margin-bottom:20px;display:flex;gap:12px;align-items:flex-start;">
+                    <div style="width:36px;height:36px;border-radius:var(--radius-lg);background:var(--state-success-surface);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                      <i data-lucide="laugh" style="width:18px;height:18px;color:var(--state-success);"></i>
+                    </div>
+                    <div style="flex:1;">
+                      <p style="font-size:14px;font-weight:600;color:var(--text-700);margin-bottom:4px;">宝宝今天很开心</p>
+                      <p style="font-size:12px;color:var(--text-400);line-height:1.5;">今天笑了23次，比昨天多8次。上午户外活动时情绪最佳。</p>
+                    </div>
+                  </div>
+
+                  <!-- Partner mood -->
+                  <div class="card-soft" style="padding:16px;margin-bottom:20px;display:flex;align-items:center;gap:12px;">
+                    <div style="width:40px;height:40px;border-radius:50%;background:var(--sage-200);display:flex;align-items:center;justify-content:center;font-size:20px;">👨</div>
+                    <div style="flex:1;">
+                      <p style="font-size:13px;color:var(--text-400);margin-bottom:2px;">爸爸的心情</p>
+                      <p style="font-size:14px;font-weight:500;color:var(--text-700);">😊 工作顺利，想宝宝了</p>
+                    </div>
+                    <span style="font-size:11px;color:var(--text-400);">2小时前</span>
+                  </div>
+
+                  <!-- Mood history (week calendar) -->
+                  <div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+                      <p style="font-size:14px;font-weight:600;color:var(--text-700);">本周心情</p>
+                      <span style="font-size:12px;color:var(--text-400);">7月12日 - 7月18日</span>
+                    </div>
+                    <div class="card" style="padding:16px;">
+                      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px;">
+                        <div style="text-align:center;">
+                          <div class="cal-cell cal-2" style="margin-bottom:6px;border-radius:var(--radius-md);"></div>
+                          <span style="font-size:11px;color:var(--text-400);">一</span>
+                        </div>
+                        <div style="text-align:center;">
+                          <div class="cal-cell cal-3" style="margin-bottom:6px;border-radius:var(--radius-md);"></div>
+                          <span style="font-size:11px;color:var(--text-400);">二</span>
+                        </div>
+                        <div style="text-align:center;">
+                          <div class="cal-cell cal-1" style="margin-bottom:6px;border-radius:var(--radius-md);"></div>
+                          <span style="font-size:11px;color:var(--text-400);">三</span>
+                        </div>
+                        <div style="text-align:center;">
+                          <div class="cal-cell cal-4" style="margin-bottom:6px;border-radius:var(--radius-md);"></div>
+                          <span style="font-size:11px;color:var(--text-400);">四</span>
+                        </div>
+                        <div style="text-align:center;">
+                          <div class="cal-cell cal-2" style="margin-bottom:6px;border-radius:var(--radius-md);"></div>
+                          <span style="font-size:11px;color:var(--text-400);">五</span>
+                        </div>
+                        <div style="text-align:center;">
+                          <div class="cal-cell cal-3" style="margin-bottom:6px;border-radius:var(--radius-md);"></div>
+                          <span style="font-size:11px;color:var(--text-400);">六</span>
+                        </div>
+                        <div style="text-align:center;">
+                          <div class="cal-cell cal-4" style="margin-bottom:6px;border-radius:var(--radius-md);border:2px solid var(--primary);"></div>
+                          <span style="font-size:11px;color:var(--primary);font-weight:600;">今</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tab bar -->
+              <div class="tab-bar">
+                <div class="tab-item">
+                  <i data-lucide="baby"></i>
+                  <span>档案</span>
+                </div>
+                <div class="tab-item">
+                  <i data-lucide="star"></i>
+                  <span>星球</span>
+                </div>
+                <div class="tab-item active">
+                  <i data-lucide="sun"></i>
+                  <span>天气</span>
+                </div>
+                <div class="tab-item">
+                  <i data-lucide="user"></i>
+                  <span>我的</span>
+                </div>
+              </div>
+
+              <div class="home-indicator"></div>
+            </div>
+          </div>
+          <div class="phone-label">
+            <div class="phone-label-title">心情天气</div>
+            <div class="phone-label-desc">Mood Weather</div>
+          </div>
+        </div>
+
+        <!-- ==================== SCREEN 7: PROFILE ==================== -->
+        <div class="phone-wrapper">
+          <div class="phone-frame">
+            <div class="phone-screen" style="background: var(--background-50);">
+              <div class="phone-notch"></div>
+              <div class="status-bar">
+                <span class="status-time">9:41</span>
+                <div class="status-icons">
+                  <svg width="18" height="12" viewBox="0 0 18 12" fill="var(--text-700)"><rect x="0" y="8" width="3" height="4" rx="0.5"/><rect x="5" y="5" width="3" height="7" rx="0.5"/><rect x="10" y="2" width="3" height="10" rx="0.5"/><rect x="15" y="0" width="3" height="12" rx="0.5"/></svg>
+                  <svg width="16" height="12" viewBox="0 0 16 12" fill="var(--text-700)"><path d="M8 2.5c2 0 3.9.8 5.3 2.1l1.2-1.2C12.8 1.7 10.5.8 8 .8S3.2 1.7 1.5 3.4l1.2 1.2C4.1 3.3 6 2.5 8 2.5zM8 5.8c1.2 0 2.3.4 3.2 1.2l1.2-1.2C11.1 4.6 9.6 4 8 4s-3.1.6-4.4 1.8l1.2 1.2C5.7 6.3 6.8 5.8 8 5.8zM8 9.1c.6 0 1.2.2 1.6.7L8 11.3l-1.6-1.6c.4-.4 1-.6 1.6-.6z"/></svg>
+                  <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x="0.5" y="0.5" width="22" height="11" rx="3" stroke="var(--text-700)" opacity="0.5"/><rect x="2" y="2" width="18" height="8" rx="1.5" fill="var(--text-700)"/><rect x="23.5" y="4" width="1.5" height="4" rx="0.5" fill="var(--text-700)" opacity="0.5"/></svg>
+                </div>
+              </div>
+
+              <div class="screen-scroll">
+                <div style="padding:20px 20px 20px;">
+                  <!-- Header with settings -->
+                  <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
+                    <button style="width:40px;height:40px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;border:none;box-shadow:var(--shadow-xs);cursor:pointer;">
+                      <i data-lucide="settings" style="width:18px;height:18px;color:var(--text-600);"></i>
+                    </button>
+                  </div>
+
+                  <!-- User profile header -->
+                  <div style="text-align:center;margin-bottom:24px;">
+                    <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--brand-200),var(--brand-400));margin:0 auto 14px;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-md);position:relative;">
+                      <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+                        <circle cx="22" cy="17" r="10" fill="#FDF2EE"/>
+                        <circle cx="19" cy="16" r="1.8" fill="#5C2820"/>
+                        <circle cx="25" cy="16" r="1.8" fill="#5C2820"/>
+                        <path d="M19 20 Q22 23 25 20" stroke="#5C2820" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                        <path d="M10 38 Q10 28 22 26 Q34 28 34 38Z" fill="#FDF2EE"/>
+                      </svg>
+                      <!-- Edit badge -->
+                      <div style="position:absolute;bottom:0;right:0;width:24px;height:24px;border-radius:50%;background:var(--card);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-sm);border:2px solid var(--background-50);">
+                        <i data-lucide="camera" style="width:12px;height:12px;color:var(--text-500);"></i>
+                      </div>
+                    </div>
+                    <h2 style="font-size:20px;font-weight:700;color:var(--text-800);margin-bottom:4px;">小雅妈妈</h2>
+                    <p style="font-size:13px;color:var(--text-400);margin-bottom:16px;">已记录 <span style="color:var(--primary);font-weight:600;">128</span> 天</p>
+
+                    <!-- Stats row -->
+                    <div style="display:flex;gap:1px;background:var(--border);border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow-xs);">
+                      <div style="flex:1;background:var(--card);padding:14px 8px;text-align:center;">
+                        <div style="font-size:20px;font-weight:700;color:var(--brand-600);">128</div>
+                        <div style="font-size:11px;color:var(--text-400);margin-top:2px;">记录天数</div>
+                      </div>
+                      <div style="flex:1;background:var(--card);padding:14px 8px;text-align:center;">
+                        <div style="font-size:20px;font-weight:700;color:var(--sage-500);">86</div>
+                        <div style="font-size:11px;color:var(--text-400);margin-top:2px;">里程碑</div>
+                      </div>
+                      <div style="flex:1;background:var(--card);padding:14px 8px;text-align:center;">
+                        <div style="font-size:20px;font-weight:700;color:var(--honey-500);">245</div>
+                        <div style="font-size:11px;color:var(--text-400);margin-top:2px;">照片</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Premium card -->
+                  <div class="card" style="padding:18px;margin-bottom:20px;background:linear-gradient(135deg,var(--brand-50) 0%,var(--sand-100) 100%);border:1px solid var(--brand-100);position:relative;overflow:hidden;">
+                    <div class="blob blob-honey" style="width:100px;height:100px;top:-30px;right:-30px;opacity:0.15;"></div>
+                    <div style="display:flex;align-items:center;gap:14px;position:relative;z-index:1;">
+                      <div style="width:48px;height:48px;border-radius:var(--radius-xl);background:linear-gradient(135deg,var(--honey-400),var(--brand-400));display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                        <i data-lucide="star" style="width:24px;height:24px;color:#fff;fill:#fff;"></i>
+                      </div>
+                      <div style="flex:1;">
+                        <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
+                          <span style="font-size:15px;font-weight:600;color:var(--text-800);">童伴会员</span>
+                          <span style="font-size:10px;padding:2px 6px;background:var(--honey-400);color:#fff;border-radius:var(--radius-sm);font-weight:600;">PRO</span>
+                        </div>
+                        <p style="font-size:12px;color:var(--text-500);line-height:1.5;">解锁无限照片存储、成长报告、专属星球皮肤</p>
+                      </div>
+                      <i data-lucide="chevron-right" style="width:18px;height:18px;color:var(--brand-500);"></i>
+                    </div>
+                  </div>
+
+                  <!-- Menu items -->
+                  <div class="card" style="overflow:hidden;">
+                    <div class="menu-item">
+                      <div class="menu-icon-wrap" style="background:var(--brand-50);">
+                        <i data-lucide="baby" style="width:20px;height:20px;color:var(--brand-500);"></i>
+                      </div>
+                      <span style="flex:1;font-size:15px;color:var(--text-700);">宝宝管理</span>
+                      <i data-lucide="chevron-right" style="width:16px;height:16px;color:var(--text-400);"></i>
+                    </div>
+                    <div class="menu-item">
+                      <div class="menu-icon-wrap" style="background:var(--sage-50);">
+                        <i data-lucide="users" style="width:20px;height:20px;color:var(--sage-500);"></i>
+                      </div>
+                      <span style="flex:1;font-size:15px;color:var(--text-700);">家庭成员</span>
+                      <div style="display:flex;align-items:center;gap:8px;">
+                        <span style="font-size:12px;color:var(--text-400);">3人</span>
+                        <i data-lucide="chevron-right" style="width:16px;height:16px;color:var(--text-400);"></i>
+                      </div>
+                    </div>
+                    <div class="menu-item">
+                      <div class="menu-icon-wrap" style="background:var(--state-warning-surface);">
+                        <i data-lucide="bell" style="width:20px;height:20px;color:var(--honey-500);"></i>
+                      </div>
+                      <span style="flex:1;font-size:15px;color:var(--text-700);">习惯提醒</span>
+                      <i data-lucide="chevron-right" style="width:16px;height:16px;color:var(--text-400);"></i>
+                    </div>
+                    <div class="menu-item">
+                      <div class="menu-icon-wrap" style="background:var(--state-info-surface);">
+                        <i data-lucide="download" style="width:20px;height:20px;color:var(--sand-500);"></i>
+                      </div>
+                      <span style="flex:1;font-size:15px;color:var(--text-700);">数据导出</span>
+                      <i data-lucide="chevron-right" style="width:16px;height:16px;color:var(--text-400);"></i>
+                    </div>
+                    <div class="menu-item">
+                      <div class="menu-icon-wrap" style="background:var(--background-200);">
+                        <i data-lucide="help-circle" style="width:20px;height:20px;color:var(--text-500);"></i>
+                      </div>
+                      <span style="flex:1;font-size:15px;color:var(--text-700);">帮助反馈</span>
+                      <i data-lucide="chevron-right" style="width:16px;height:16px;color:var(--text-400);"></i>
+                    </div>
+                  </div>
+
+                  <!-- Version info -->
+                  <p style="text-align:center;margin-top:28px;font-size:11px;color:var(--text-300);">童伴星球 v2.0.0</p>
+                </div>
+              </div>
+
+              <!-- Tab bar -->
+              <div class="tab-bar">
+                <div class="tab-item">
+                  <i data-lucide="baby"></i>
+                  <span>档案</span>
+                </div>
+                <div class="tab-item">
+                  <i data-lucide="star"></i>
+                  <span>星球</span>
+                </div>
+                <div class="tab-item">
+                  <i data-lucide="sun"></i>
+                  <span>天气</span>
+                </div>
+                <div class="tab-item active">
+                  <i data-lucide="user"></i>
+                  <span>我的</span>
+                </div>
+              </div>
+
+              <div class="home-indicator"></div>
+            </div>
+          </div>
+          <div class="phone-label">
+            <div class="phone-label-title">我的</div>
+            <div class="phone-label-desc">Profile</div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+    <script>lucide.createIcons();</script>
+</body>
+</html>
