@@ -9,6 +9,7 @@ interface InputProps extends TextInputProps {
   leftIcon?: string;
 }
 
+// 输入框：白色背景、16px 圆角、52 高度、细边框（与设计稿 .input-field 一致）
 export function Input({ label, error, containerStyle, leftIcon, style, ...rest }: InputProps) {
   return (
     <View style={[styles.container, containerStyle]}>
@@ -16,7 +17,7 @@ export function Input({ label, error, containerStyle, leftIcon, style, ...rest }
       <View style={[styles.inputWrap, !!error && styles.inputWrapError]}>
         {leftIcon ? <Text style={styles.leftIcon}>{leftIcon}</Text> : null}
         <TextInput
-          placeholderTextColor={COLORS.muted}
+          placeholderTextColor={PALETTE_text300}
           style={[styles.input, style]}
           {...rest}
         />
@@ -26,35 +27,37 @@ export function Input({ label, error, containerStyle, leftIcon, style, ...rest }
   );
 }
 
+const PALETTE_text300 = '#C4B8A5';
+
 const styles = StyleSheet.create({
   container: {
     marginBottom: 12,
   },
   label: {
-    fontSize: 14,
-    color: COLORS.ink,
+    fontSize: 13,
+    color: PALETTE_text300,
     marginBottom: 6,
     fontWeight: '500',
   },
   inputWrap: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.bg2,
-    borderRadius: 12,
-    paddingHorizontal: 14,
+    backgroundColor: COLORS.cardBg,
+    borderRadius: 16,
+    paddingHorizontal: 20,
     borderWidth: 1,
     borderColor: COLORS.rule,
+    height: 52,
   },
   inputWrapError: {
     borderColor: COLORS.danger,
   },
   leftIcon: {
     fontSize: 18,
-    marginRight: 8,
+    marginRight: 10,
   },
   input: {
     flex: 1,
-    paddingVertical: 12,
     fontSize: 15,
     color: COLORS.ink,
   },

@@ -10,7 +10,7 @@
     "splash": {
       "image": "./assets/growth_planet_1024x1024.jpg",
       "resizeMode": "contain",
-      "backgroundColor": "#FFF8F3"
+      "backgroundColor": "#D4725C"
     },
     "ios": {
       "supportsTablet": true,
@@ -19,7 +19,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/growth_planet_1024x1024.jpg",
-        "backgroundColor": "#FFF8F3"
+        "backgroundColor": "#D4725C"
       },
       "package": "com.growthcompanion.app"
     },

@@ -3,15 +3,62 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-nati
 import { useFocusEffect } from '@react-navigation/native';
 import { Header } from '@/components/ui/Header';
 import { Card } from '@/components/ui/Card';
-import { WeatherBottle } from '@/components/weather/WeatherBottle';
+import { Icon, IconName } from '@/components/ui/Icon';
+import { GradientBg, Blob, SunCloudArt } from '@/components/ui/Decor';
 import { MoodForm } from '@/components/weather/MoodForm';
 import { MoodHistory } from '@/components/weather/MoodHistory';
 import { useAuthStore } from '@/stores/authStore';
 import { useWeatherStore } from '@/stores/weatherStore';
-import { confirm } from '@/stores/uiStore';
-import { COLORS } from '@/utils/constants';
+import { toast, confirm } from '@/stores/uiStore';
+import { COLORS, PALETTE } from '@/utils/constants';
 import { WEATHER_CONFIG } from '@/types/weather';
-import type { WeatherType } from '@/types';
+import type { WeatherType, MoodRecord } from '@/types';
+
+// 心情快速选项：emoji + 标签 + 对应天气类型
+const MOOD_OPTIONS: { emoji: string; label: string; weather: WeatherType }[] = [
+  { emoji: '😢', label: '难过', weather: 'rainy' },
+  { emoji: '😐', label: '平静', weather: 'cloudy' },
+  { emoji: '🙂', label: '不错', weather: 'rainbow' },
+  { emoji: '😄', label: '开心', weather: 'sunny' },
+  { emoji: '🤩', label: '超棒', weather: 'sunny' },
+];
+
+// 心情分数映射到日历单元格颜色
+function scoreToColor(score: number | null): string {
+  if (score == null) return PALETTE.bg[200];
+  if (score >= 5) return PALETTE.honey[400];
+  if (score >= 4) return PALETTE.sage[300];
+  if (score >= 3) return PALETTE.brand[300];
+  if (score >= 2) return PALETTE.sand[400];
+  return PALETTE.text[400];
+}
+
+// 计算最近 7 天的心情分数（按日期对齐）
+function buildWeekData(records: MoodRecord[]): { date: Date; score: number | null; isToday: boolean }[] {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const result: { date: Date; score: number | null; isToday: boolean }[] = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    const dayStart = d.getTime();
+    const dayEnd = dayStart + 86400000;
+    // 取该天最近一条记录的分数
+    const dayRecords = records.filter((r) => r.date >= dayStart && r.date < dayEnd);
+    const latest = dayRecords.sort((a, b) => b.date - a.date)[0];
+    result.push({
+      date: d,
+      score: latest ? WEATHER_CONFIG[latest.weather].score : null,
+      isToday: i === 0,
+    });
+  }
+  return result;
+}
+
+// 周一起始的星期几标签
+function weekdayLabel(d: Date): string {
+  return ['日', '一', '二', '三', '四', '五', '六'][d.getDay()];
+}
 
 export default function WeatherScreen() {
   const { currentBabyId } = useAuthStore();
@@ -24,7 +71,13 @@ export default function WeatherScreen() {
     }, [currentBabyId])
   );
 
-  const handleAdd = async (data: Parameters<typeof addMood>[1]) => {
+  const handleQuickAdd = async (weather: WeatherType) => {
+    if (!currentBabyId) return;
+    await addMood(currentBabyId, { weather, temperature: 'warm', date: Date.now() });
+    toast.success(`已记录今天的心情：${WEATHER_CONFIG[weather].mood}`);
+  };
+
+  const handleFormAdd = async (data: Parameters<typeof addMood>[1]) => {
     if (!currentBabyId) return;
     await addMood(currentBabyId, data);
   };
@@ -37,100 +90,143 @@ export default function WeatherScreen() {
   const stats = getStatistics();
   const recent = getRecentRecords(20);
   const latest = moods?.records[0];
-  const trendText = {
-    improving: '↗️ 心情在变好',
-    stable: '➡️ 心情平稳',
-    declining: '↘️ 心情需要关注',
-  }[stats.weeklyTrend];
+  const weekData = buildWeekData(moods?.records || []);
+  const latestWeather: WeatherType = latest?.weather || 'sunny';
+  const latestCfg = WEATHER_CONFIG[latestWeather];
 
-  // 天气分布
-  const distribution = (Object.keys(WEATHER_CONFIG) as WeatherType[])
-    .map((w) => ({ weather: w, count: stats.distribution[w] || 0 }))
-    .filter((x) => x.count > 0)
-    .sort((a, b) => b.count - a.count);
-  const maxCount = Math.max(...distribution.map((d) => d.count), 1);
+  // 周日期范围文案
+  const weekStart = weekData[0]?.date;
+  const weekEnd = weekData[6]?.date;
+  const weekRangeText = weekStart && weekEnd
+    ? `${weekStart.getMonth() + 1}月${weekStart.getDate()}日 - ${weekEnd.getMonth() + 1}月${weekEnd.getDate()}日`
+    : '';
+
+  // 心情洞察文案
+  const insightText = latest
+    ? stats.weeklyTrend === 'improving'
+      ? `最近心情在变好，平均分 ${stats.averageMood}，继续保持 🌈`
+      : stats.weeklyTrend === 'declining'
+        ? `最近心情有些起伏，平均分 ${stats.averageMood}，多陪陪宝宝吧 💕`
+        : `宝宝心情平稳，平均分 ${stats.averageMood}，状态不错 ✨`
+    : '还没有记录，点击下方表情快速记录今天的心情吧';
+
+  const insightIcon: IconName = latest
+    ? stats.weeklyTrend === 'improving'
+      ? 'laugh'
+      : stats.weeklyTrend === 'declining'
+        ? 'cloud-rain'
+        : 'smile'
+    : 'sparkles';
 
   return (
     <View style={styles.container}>
-      <Header title="心情天气瓶" subtitle="认识每一种情绪" />
+      <Header smallLabel="今日心情" title="心情天气" />
 
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        {/* 今日天气瓶 */}
-        <View style={{ paddingHorizontal: 16, marginBottom: 16 }}>
-          <Card style={styles.todayCard}>
-            <Text style={styles.todayTitle}>{latest ? '最近一次心情' : '今天还没有记录'}</Text>
-            {latest ? (
-              <View style={styles.todayBottleWrap}>
-                <WeatherBottle weather={latest.weather} size="lg" />
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 110 }}>
+        {/* 今日天气卡：渐变 + 太阳云朵插画 */}
+        <View style={styles.section}>
+          <GradientBg colors={[PALETTE.honey[400], PALETTE.brand[300]]} style={styles.todayCard}>
+            <Blob color="#FFFFFF" size={150} opacity={0.18} style={{ top: -40, right: -40 }} />
+            <View style={styles.todayRow}>
+              <SunCloudArt size={90} />
+              <View style={styles.todayText}>
+                <Text style={styles.todayWeather}>{latestCfg.label}</Text>
+                <Text style={styles.todayDesc}>{latest?.note || latestCfg.description}</Text>
               </View>
-            ) : (
-              <View style={styles.todayBottleWrap}>
-                <WeatherBottle weather="cloudy" size="lg" />
-              </View>
-            )}
-            {latest?.note ? <Text style={styles.todayNote}>「{latest.note}」</Text> : null}
-            <Text style={styles.trend}>{trendText}</Text>
+            </View>
+          </GradientBg>
+        </View>
+
+        {/* 心情选择器 */}
+        <View style={styles.section}>
+          <Text style={styles.selectorTitle}>现在的心情是？</Text>
+          <View style={styles.moodRow}>
+            {MOOD_OPTIONS.map((opt) => {
+              const active = latestWeather === opt.weather && opt.label === latestCfg.mood;
+              return (
+                <TouchableOpacity
+                  key={opt.label}
+                  style={[styles.moodBtn, active && styles.moodBtnActive]}
+                  onPress={() => handleQuickAdd(opt.weather)}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.moodEmoji}>{opt.emoji}</Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+          <View style={styles.moodLabelRow}>
+            {MOOD_OPTIONS.map((opt) => {
+              const active = latestWeather === opt.weather && opt.label === latestCfg.mood;
+              return (
+                <Text key={opt.label} style={[styles.moodLabel, active && styles.moodLabelActive]}>
+                  {opt.label}
+                </Text>
+              );
+            })}
+          </View>
+        </View>
+
+        {/* 心情洞察卡 */}
+        <View style={styles.section}>
+          <Card style={styles.insightCard}>
+            <View style={styles.insightIconWrap}>
+              <Icon name={insightIcon} size={18} color={PALETTE.state.success} strokeWidth={2} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.insightTitle}>{latest ? '心情小贴士' : '开始记录'}</Text>
+              <Text style={styles.insightText}>{insightText}</Text>
+            </View>
           </Card>
         </View>
 
-        {/* 统计 */}
-        <View style={{ paddingHorizontal: 16, marginBottom: 16 }}>
-          <Text style={styles.sectionTitle}>情绪统计</Text>
-          <View style={styles.statsRow}>
-            <Card style={[styles.statCard, { backgroundColor: COLORS.accent + '12' }]}>
-              <Text style={styles.statValue}>{stats.totalRecords}</Text>
-              <Text style={styles.statLabel}>总记录</Text>
-            </Card>
-            <Card style={[styles.statCard, { backgroundColor: COLORS.accent2 + '12' }]}>
-              <Text style={styles.statValue}>{stats.averageMood}</Text>
-              <Text style={styles.statLabel}>平均分</Text>
-            </Card>
-            <Card style={[styles.statCard, { backgroundColor: COLORS.accent3 + '40' }]}>
-              <Text style={styles.statValue}>{stats.mostFrequent ? WEATHER_CONFIG[stats.mostFrequent].icon : '-'}</Text>
-              <Text style={styles.statLabel}>最常见</Text>
-            </Card>
+        {/* 本周心情日历 */}
+        <View style={styles.section}>
+          <View style={styles.weekHeader}>
+            <Text style={styles.weekTitle}>本周心情</Text>
+            <Text style={styles.weekRange}>{weekRangeText}</Text>
           </View>
-
-          {/* 分布图 */}
-          {distribution.length > 0 && (
-            <Card style={styles.distCard}>
-              <Text style={styles.distTitle}>情绪分布</Text>
-              {distribution.map((d) => {
-                const cfg = WEATHER_CONFIG[d.weather];
-                return (
-                  <View key={d.weather} style={styles.distRow}>
-                    <Text style={styles.distIcon}>{cfg.icon}</Text>
-                    <Text style={styles.distLabel}>{cfg.label}</Text>
-                    <View style={styles.distBarWrap}>
-                      <View
-                        style={[styles.distBar, { width: `${(d.count / maxCount) * 100}%`, backgroundColor: cfg.color }]}
-                      />
-                    </View>
-                    <Text style={styles.distCount}>{d.count}</Text>
+          <Card style={styles.weekCard}>
+            <View style={styles.weekGrid}>
+              {weekData.map((d, i) => (
+                <View key={i} style={styles.weekCell}>
+                  <View
+                    style={[
+                      styles.calCell,
+                      { backgroundColor: scoreToColor(d.score) },
+                      d.isToday && styles.calCellToday,
+                    ]}
+                  >
+                    {d.score != null ? (
+                      <Text style={styles.calCellText}>{d.score}</Text>
+                    ) : null}
                   </View>
-                );
-              })}
-            </Card>
-          )}
+                  <Text style={[styles.weekDayLabel, d.isToday && styles.weekDayLabelToday]}>
+                    {d.isToday ? '今' : weekdayLabel(d.date)}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          </Card>
         </View>
 
-        {/* 历史记录 */}
-        <View style={{ paddingHorizontal: 16, marginBottom: 16 }}>
+        {/* 心情日记 */}
+        <View style={styles.section}>
           <Text style={styles.sectionTitle}>心情日记</Text>
+          <MoodHistory records={recent} onDelete={handleDelete} />
         </View>
       </ScrollView>
 
-      {/* 历史记录列表（独立滚动） */}
-      <View style={{ flex: 1, paddingHorizontal: 0 }}>
-        <MoodHistory records={recent} onDelete={handleDelete} />
-      </View>
-
-      {/* 浮动添加按钮 */}
-      <TouchableOpacity style={styles.fab} activeOpacity={0.85} onPress={() => setFormVisible(true)}>
-        <Text style={styles.fabText}>+</Text>
+      {/* FAB */}
+      <TouchableOpacity
+        style={styles.fab}
+        activeOpacity={0.85}
+        onPress={() => setFormVisible(true)}
+      >
+        <Icon name="plus" size={26} color="#FFFFFF" strokeWidth={2.5} />
       </TouchableOpacity>
 
-      <MoodForm visible={formVisible} onClose={() => setFormVisible(false)} onSubmit={handleAdd} />
+      <MoodForm visible={formVisible} onClose={() => setFormVisible(false)} onSubmit={handleFormAdd} />
     </View>
   );
 }
@@ -141,127 +237,189 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.bg,
   },
   scrollView: {
-    flexShrink: 1,
-    flexGrow: 0,
+    flex: 1,
   },
-  todayCard: {
-    alignItems: 'center',
-    padding: 24,
-    borderRadius: 20,
-  },
-  todayTitle: {
-    fontSize: 14,
-    color: COLORS.muted,
-    marginBottom: 16,
-  },
-  todayBottleWrap: {
-    marginVertical: 12,
-  },
-  todayNote: {
-    fontSize: 14,
-    color: COLORS.ink,
-    fontStyle: 'italic',
-    textAlign: 'center',
-    marginTop: 16,
-    paddingHorizontal: 16,
-    lineHeight: 22,
-  },
-  trend: {
-    fontSize: 13,
-    color: COLORS.accent2,
-    marginTop: 16,
-    fontWeight: '600',
+  section: {
+    paddingHorizontal: 20,
+    marginBottom: 18,
   },
   sectionTitle: {
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: '600',
-    color: COLORS.ink,
+    color: PALETTE.text[700],
     marginBottom: 12,
   },
-  statsRow: {
-    flexDirection: 'row',
-    gap: 10,
-    marginBottom: 12,
-  },
-  statCard: {
-    flex: 1,
-    alignItems: 'center',
-    paddingVertical: 16,
-    borderRadius: 16,
-  },
-  statValue: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: COLORS.ink,
-  },
-  statLabel: {
-    fontSize: 11,
-    color: COLORS.muted,
-    marginTop: 4,
-  },
-  distCard: {
-    padding: 18,
+  // 今日天气卡
+  todayCard: {
     borderRadius: 20,
+    padding: 24,
+    overflow: 'hidden',
   },
-  distTitle: {
+  todayRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 20,
+  },
+  todayText: {
+    flex: 1,
+  },
+  todayWeather: {
+    fontSize: 30,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    marginBottom: 4,
+  },
+  todayDesc: {
+    fontSize: 13,
+    color: 'rgba(255,255,255,0.85)',
+    lineHeight: 20,
+  },
+  // 心情选择器
+  selectorTitle: {
     fontSize: 14,
     fontWeight: '600',
-    color: COLORS.ink,
+    color: PALETTE.text[700],
     marginBottom: 14,
   },
-  distRow: {
+  moodRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 6,
+    marginBottom: 6,
+  },
+  moodBtn: {
+    flex: 1,
+    aspectRatio: 1,
+    borderRadius: 16,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(235, 226, 214, 0.6)',
+    shadowColor: PALETTE.text[900],
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.03,
+    shadowRadius: 3,
+    elevation: 1,
+  },
+  moodBtnActive: {
+    backgroundColor: PALETTE.brand[50],
+    borderColor: PALETTE.brand[500],
+    borderWidth: 2,
+  },
+  moodEmoji: {
+    fontSize: 28,
+  },
+  moodLabelRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 4,
+  },
+  moodLabel: {
+    flex: 1,
+    fontSize: 10,
+    color: PALETTE.text[400],
+    textAlign: 'center',
+  },
+  moodLabelActive: {
+    color: PALETTE.brand[500],
+    fontWeight: '600',
+  },
+  // 心情洞察
+  insightCard: {
+    flexDirection: 'row',
+    gap: 12,
+    alignItems: 'flex-start',
+    padding: 16,
+    borderRadius: 16,
+  },
+  insightIconWrap: {
+    width: 36,
+    height: 36,
+    borderRadius: 12,
+    backgroundColor: PALETTE.state.successSurface,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  insightTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: PALETTE.text[700],
+    marginBottom: 4,
+  },
+  insightText: {
+    fontSize: 12,
+    color: PALETTE.text[400],
+    lineHeight: 18,
+  },
+  // 周日历
+  weekHeader: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     marginBottom: 12,
   },
-  distIcon: {
-    fontSize: 20,
-    width: 32,
-  },
-  distLabel: {
-    fontSize: 12,
-    color: COLORS.muted,
-    width: 56,
-  },
-  distBarWrap: {
-    flex: 1,
-    height: 14,
-    backgroundColor: COLORS.bg2,
-    borderRadius: 7,
-    overflow: 'hidden',
-    marginHorizontal: 10,
-  },
-  distBar: {
-    height: '100%',
-    borderRadius: 7,
-  },
-  distCount: {
-    fontSize: 13,
-    color: COLORS.ink,
+  weekTitle: {
+    fontSize: 14,
     fontWeight: '600',
-    width: 28,
-    textAlign: 'right',
+    color: PALETTE.text[700],
   },
+  weekRange: {
+    fontSize: 12,
+    color: PALETTE.text[400],
+  },
+  weekCard: {
+    padding: 16,
+    borderRadius: 16,
+  },
+  weekGrid: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  weekCell: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  calCell: {
+    width: '100%',
+    aspectRatio: 1,
+    borderRadius: 10,
+    marginBottom: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  calCellToday: {
+    borderWidth: 2,
+    borderColor: PALETTE.brand[500],
+  },
+  calCellText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  weekDayLabel: {
+    fontSize: 11,
+    color: PALETTE.text[400],
+  },
+  weekDayLabelToday: {
+    color: PALETTE.brand[500],
+    fontWeight: '600',
+  },
+  // FAB
   fab: {
     position: 'absolute',
     right: 20,
-    bottom: 24,
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: COLORS.accent,
+    bottom: 100,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: PALETTE.brand[500],
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: COLORS.accent,
+    shadowColor: PALETTE.brand[500],
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.35,
     shadowRadius: 12,
     elevation: 6,
-  },
-  fabText: {
-    color: '#FFFFFF',
-    fontSize: 30,
-    fontWeight: '300',
-    marginTop: -2,
   },
 });
