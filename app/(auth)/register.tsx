@@ -6,18 +6,22 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  TextInput,
 } from 'react-native';
 import { Link, router } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
+import { Icon } from '@/components/ui/Icon';
+import { Blob, OnboardingIllustration } from '@/components/ui/Decor';
 import { useAuthStore } from '@/stores/authStore';
 import { toast } from '@/stores/uiStore';
-import { COLORS } from '@/utils/constants';
+import { COLORS, PALETTE } from '@/utils/constants';
 import { validateEmail, validatePassword, validatePhone } from '@/utils/validators';
 import { EVENTS, logEvent, setUserProperty } from '@/services/analytics';
 
 export default function RegisterScreen() {
   const { register, loading, clearError } = useAuthStore();
+  const insets = useSafeAreaInsets();
   const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -59,51 +63,104 @@ export default function RegisterScreen() {
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
-        <View style={styles.hero}>
-          <Text style={styles.logo}>🌱</Text>
+      <ScrollView
+        contentContainerStyle={[styles.scroll, { paddingTop: 60 + insets.top }]}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        {/* 装饰光斑 */}
+        <Blob color={PALETTE.sage[300]} size={220} opacity={0.18} style={{ top: -80, left: -80 }} />
+        <Blob color={PALETTE.brand[300]} size={180} opacity={0.18} style={{ top: 80, right: -60 }} />
+
+        {/* 插画 */}
+        <View style={styles.illustrationWrap}>
+          <OnboardingIllustration size={200} />
+        </View>
+
+        {/* 标题 */}
+        <View style={styles.titleWrap}>
           <Text style={styles.title}>创建账号</Text>
           <Text style={styles.subtitle}>开启陪伴成长之旅</Text>
         </View>
 
+        {/* 表单 */}
         <View style={styles.form}>
-          <Input
-            label="昵称"
-            placeholder="如何称呼您？"
-            value={displayName}
-            onChangeText={setDisplayName}
-            leftIcon="👤"
-          />
-          <Input
-            label="邮箱"
-            placeholder="请输入邮箱"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            leftIcon="📧"
-          />
-          <Input
-            label="手机号（选填）"
-            placeholder="便于找回密码"
-            value={phone}
-            onChangeText={setPhone}
-            keyboardType="phone-pad"
-            leftIcon="📱"
-          />
-          <Input
-            label="密码"
-            placeholder="至少6位"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-            leftIcon="🔒"
-          />
+          {/* 昵称 */}
+          <View style={styles.field}>
+            <Icon name="smile" size={18} color={PALETTE.text[400]} strokeWidth={2} />
+            <View style={styles.fieldDivider} />
+            <TextInput
+              style={styles.fieldInput}
+              placeholder="如何称呼您？"
+              placeholderTextColor={PALETTE.text[300]}
+              value={displayName}
+              onChangeText={setDisplayName}
+              maxLength={20}
+            />
+          </View>
+
+          {/* 邮箱 */}
+          <View style={styles.field}>
+            <Icon name="user" size={18} color={PALETTE.text[400]} strokeWidth={2} />
+            <View style={styles.fieldDivider} />
+            <TextInput
+              style={styles.fieldInput}
+              placeholder="请输入邮箱"
+              placeholderTextColor={PALETTE.text[300]}
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+            />
+          </View>
+
+          {/* 手机号 */}
+          <View style={styles.field}>
+            <Text style={styles.prefix}>+86</Text>
+            <View style={styles.fieldDivider} />
+            <TextInput
+              style={styles.fieldInput}
+              placeholder="手机号（选填）"
+              placeholderTextColor={PALETTE.text[300]}
+              value={phone}
+              onChangeText={(t) => setPhone(t.replace(/[^0-9]/g, '').slice(0, 11))}
+              keyboardType="phone-pad"
+            />
+          </View>
+
+          {/* 密码 */}
+          <View style={styles.field}>
+            <Icon name="settings" size={18} color={PALETTE.text[400]} strokeWidth={2} />
+            <View style={styles.fieldDivider} />
+            <TextInput
+              style={styles.fieldInput}
+              placeholder="设置密码（至少6位）"
+              placeholderTextColor={PALETTE.text[300]}
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry
+            />
+          </View>
 
           {formError && <Text style={styles.error}>{formError}</Text>}
 
-          <Button title="注册" onPress={handleRegister} loading={loading} size="lg" style={styles.btn} />
+          <Button
+            title="注册"
+            onPress={handleRegister}
+            loading={loading}
+            size="lg"
+            style={styles.btn}
+          />
 
+          {/* 协议 */}
+          <Text style={styles.terms}>
+            注册即表示同意
+            <Text style={styles.termsLink}> 《用户协议》 </Text>
+            和
+            <Text style={styles.termsLink}> 《隐私政策》 </Text>
+          </Text>
+
+          {/* 登录入口 */}
           <View style={styles.footer}>
             <Text style={styles.footerText}>已有账号？</Text>
             <Link href="/(auth)/login" asChild>
@@ -123,51 +180,90 @@ const styles = StyleSheet.create({
   },
   scroll: {
     flexGrow: 1,
-    padding: 24,
-    justifyContent: 'center',
+    paddingHorizontal: 32,
+    paddingBottom: 40,
   },
-  hero: {
+  illustrationWrap: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  titleWrap: {
     alignItems: 'center',
     marginBottom: 24,
   },
-  logo: {
-    fontSize: 56,
-    marginBottom: 8,
-  },
   title: {
-    fontSize: 28,
+    fontSize: 26,
     fontWeight: '700',
-    color: COLORS.ink,
+    color: PALETTE.text[800],
+    letterSpacing: -0.3,
+    marginBottom: 8,
   },
   subtitle: {
     fontSize: 14,
-    color: COLORS.muted,
-    marginTop: 6,
+    color: PALETTE.text[400],
   },
   form: {
     width: '100%',
   },
+  field: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    paddingHorizontal: 18,
+    borderWidth: 1,
+    borderColor: 'rgba(235, 226, 214, 0.6)',
+    height: 52,
+    marginBottom: 12,
+  },
+  prefix: {
+    fontSize: 15,
+    color: PALETTE.text[600],
+    fontWeight: '500',
+  },
+  fieldDivider: {
+    width: 1,
+    height: 20,
+    backgroundColor: PALETTE.bg[300],
+    marginHorizontal: 12,
+  },
+  fieldInput: {
+    flex: 1,
+    fontSize: 15,
+    color: PALETTE.text[800],
+    padding: 0,
+  },
   btn: {
-    marginTop: 16,
+    marginTop: 8,
     width: '100%',
   },
   error: {
-    color: COLORS.danger,
+    color: PALETTE.state.error,
     fontSize: 13,
     marginBottom: 8,
     textAlign: 'center',
   },
+  terms: {
+    textAlign: 'center',
+    marginTop: 22,
+    fontSize: 12,
+    color: PALETTE.text[400],
+    lineHeight: 20,
+  },
+  termsLink: {
+    color: PALETTE.brand[600],
+  },
   footer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: 20,
+    marginTop: 18,
   },
   footerText: {
-    color: COLORS.muted,
+    color: PALETTE.text[400],
     fontSize: 14,
   },
   link: {
-    color: COLORS.accent,
+    color: PALETTE.brand[600],
     fontSize: 14,
     fontWeight: '600',
     marginLeft: 4,

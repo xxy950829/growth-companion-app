@@ -1,47 +1,27 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useAuthStore } from '@/stores/authStore';
-import { COLORS } from '@/utils/constants';
-import { formatAge } from '@/utils/helpers';
-import { BabyAvatar } from './BabyAvatar';
+import { View, Text, StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { PALETTE } from '@/utils/constants';
 
 interface HeaderProps {
   title: string;
   subtitle?: string;
+  // 标题上方的小标签（如"今日心情"、"7月18日 星期六"）
+  smallLabel?: string;
   right?: React.ReactNode;
 }
 
-export function Header({ title, subtitle, right }: HeaderProps) {
-  const { babies, currentBabyId, switchBaby } = useAuthStore();
-  const baby = babies.find((b) => b.id === currentBabyId);
-
-  const handleSwitch = () => {
-    if (babies.length <= 1) return;
-    const idx = babies.findIndex((b) => b.id === currentBabyId);
-    const next = babies[(idx + 1) % babies.length];
-    switchBaby(next.id);
-  };
-
+// 通用页头：左上为小标签 + 大标题 + 副标题，右侧可选操作区
+export function Header({ title, subtitle, smallLabel, right }: HeaderProps) {
+  const insets = useSafeAreaInsets();
   return (
-    <View style={styles.header}>
+    <View style={[styles.header, { paddingTop: 12 + insets.top }]}>
       <View style={styles.left}>
-        <TouchableOpacity onPress={handleSwitch} disabled={babies.length <= 1} activeOpacity={0.7}>
-          <View style={styles.babyInfo}>
-            <BabyAvatar baby={baby} size={40} style={styles.babyIcon} />
-            <View>
-              <Text style={styles.babyName}>{baby?.name || '未设置'}</Text>
-              <Text style={styles.babyAge}>
-                {baby ? `${formatAge(baby.birthday)} · 共${babies.length}个宝宝` : '点击创建'}
-              </Text>
-            </View>
-          </View>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.right}>
+        {smallLabel ? <Text style={styles.smallLabel}>{smallLabel}</Text> : null}
         <Text style={styles.title}>{title}</Text>
         {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
-        {right}
       </View>
+      {right ? <View style={styles.right}>{right}</View> : null}
     </View>
   );
 }
@@ -49,44 +29,34 @@ export function Header({ title, subtitle, right }: HeaderProps) {
 const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    paddingTop: 48,
-    paddingBottom: 12,
-    backgroundColor: COLORS.bg,
+    paddingBottom: 8,
+    backgroundColor: 'transparent',
   },
   left: {
     flex: 1,
   },
-  babyInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  babyIcon: {
-    marginRight: 10,
-  },
-  babyName: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: COLORS.ink,
-  },
-  babyAge: {
-    fontSize: 12,
-    color: COLORS.muted,
-    marginTop: 2,
-  },
   right: {
     alignItems: 'flex-end',
+    justifyContent: 'center',
+    height: 40,
+  },
+  smallLabel: {
+    fontSize: 13,
+    color: PALETTE.text[400],
+    marginBottom: 4,
   },
   title: {
-    fontSize: 14,
-    color: COLORS.muted,
-    fontWeight: '500',
+    fontSize: 24,
+    fontWeight: '700',
+    color: PALETTE.text[800],
+    letterSpacing: -0.3,
   },
   subtitle: {
-    fontSize: 12,
-    color: COLORS.muted,
-    marginTop: 2,
+    fontSize: 13,
+    color: PALETTE.text[400],
+    marginTop: 4,
   },
 });

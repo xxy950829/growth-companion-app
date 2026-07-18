@@ -1,7 +1,8 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Platform } from 'react-native';
 import { Tabs } from 'expo-router';
-import { COLORS } from '@/utils/constants';
+import { COLORS, PALETTE } from '@/utils/constants';
+import { Icon, IconName } from '@/components/ui/Icon';
 
 export default function TabsLayout() {
   return (
@@ -9,52 +10,59 @@ export default function TabsLayout() {
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: COLORS.accent,
-        tabBarInactiveTintColor: COLORS.muted,
+        tabBarInactiveTintColor: PALETTE.text[400],
         tabBarStyle: {
-          backgroundColor: COLORS.cardBg,
+          backgroundColor: 'rgba(255,255,255,0.92)',
           borderTopColor: COLORS.rule,
-          height: 64,
-          paddingBottom: 8,
-          paddingTop: 6,
+          borderTopWidth: 1,
+          height: Platform.OS === 'ios' ? 84 : 68,
+          paddingBottom: Platform.OS === 'ios' ? 24 : 8,
+          paddingTop: 8,
+          elevation: 0,
+          shadowOpacity: 0,
         },
         tabBarLabelStyle: {
-          fontSize: 11,
+          fontSize: 10,
           fontWeight: '500',
+          marginTop: 2,
+        },
+        tabBarIconStyle: {
+          marginTop: 0,
         },
       }}
     >
       <Tabs.Screen
         name="archive"
         options={{
-          title: '成长档案',
-          tabBarIcon: ({ size }) => <TabIcon icon="📚" size={size} />,
+          title: '档案',
+          tabBarIcon: ({ color }) => <TabIcon name="baby" color={color} />,
         }}
       />
       <Tabs.Screen
         name="planet"
         options={{
-          title: '成长星球',
-          tabBarIcon: ({ size }) => <TabIcon icon="🪐" size={size} />,
+          title: '星球',
+          tabBarIcon: ({ color }) => <TabIcon name="star" color={color} />,
         }}
       />
       <Tabs.Screen
         name="weather"
         options={{
-          title: '心情天气',
-          tabBarIcon: ({ size }) => <TabIcon icon="🌤️" size={size} />,
+          title: '天气',
+          tabBarIcon: ({ color }) => <TabIcon name="sun" color={color} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: '个人中心',
-          tabBarIcon: ({ size }) => <TabIcon icon="👤" size={size} />,
+          title: '我的',
+          tabBarIcon: ({ color }) => <TabIcon name="user" color={color} />,
         }}
       />
     </Tabs>
   );
 }
 
-function TabIcon({ icon, size }: { icon: string; size: number }) {
-  return <Text style={{ fontSize: Math.max(size - 4, 16) }}>{icon}</Text>;
+function TabIcon({ name, color }: { name: IconName; color: string }) {
+  return <Icon name={name} size={23} color={color} strokeWidth={2} />;
 }
